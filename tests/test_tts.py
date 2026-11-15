@@ -22,3 +22,12 @@ def test_synthesize_returns_16k_pcm(tts):
 def test_stream_splits_sentences(tts):
     chunks = list(tts.stream("Hi there. Is Tuesday at three free?"))
     assert len(chunks) == 2
+
+
+def test_parallel_synthesis(tts):
+    from concurrent.futures import ThreadPoolExecutor
+
+    texts = [f"Your appointment number {i} is confirmed." for i in range(8)]
+    with ThreadPoolExecutor(4) as pool:
+        results = list(pool.map(tts.synthesize, texts))
+    assert all(pcm.duration(r) > 1.0 for r in results)
