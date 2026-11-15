@@ -39,7 +39,10 @@ TOOLS = [
         time=TIME,
     ),
     _fn("reschedule_appointment", "Move this caller's booking to another slot.", day=DAY, time=TIME),
-    _fn("cancel_appointment", "Cancel this caller's booking."),
+    _fn(
+        "cancel_appointment",
+        "Cancel this caller's booking. Only when they explicitly ask to cancel, never to end the call.",
+    ),
 ]
 
 
