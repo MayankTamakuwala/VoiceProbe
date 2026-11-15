@@ -6,6 +6,7 @@ from voiceprobe.booking.store import (
     BookingStore,
     InvalidSlot,
     KeyReused,
+    NotFound,
     SlotTaken,
     parse_time,
 )
@@ -68,3 +69,44 @@ def test_available(store):
     free = store.available("Monday")
     assert "09:00" not in free
     assert len(free) == 7
+
+
+def test_cancel_frees_slot(store):
+    b = store.book("k1", "Sam", "tuesday", "15:00")
+    assert store.cancel("k2", b.id).status == "cancelled"
+    assert "15:00" in store.available("tuesday")
+    store.book("k3", "Alex", "tuesday", "15:00")
+
+
+def test_cancel_retry(store):
+    b = store.book("k1", "Sam", "tuesday", "15:00")
+    store.cancel("k2", b.id)
+    assert store.cancel("k2", b.id).status == "cancelled"
+
+
+def test_cancel_unknown(store):
+    with pytest.raises(NotFound):
+        store.cancel("k1", "nope")
+
+
+def test_reschedule(store):
+    b = store.book("k1", "Sam", "tuesday", "15:00")
+    moved = store.reschedule("k2", b.id, "wednesday", "10am")
+    assert (moved.id, moved.day, moved.time) == (b.id, "wednesday", "10:00")
+    assert "15:00" in store.available("tuesday")
+    assert store.get(b.id) == moved
+
+
+def test_reschedule_into_taken_slot(store):
+    a = store.book("k1", "Sam", "tuesday", "15:00")
+    store.book("k2", "Alex", "tuesday", "16:00")
+    with pytest.raises(SlotTaken):
+        store.reschedule("k3", a.id, "tuesday", "16:00")
+    assert store.get(a.id).time == "15:00"
+
+
+def test_reschedule_cancelled(store):
+    b = store.book("k1", "Sam", "tuesday", "15:00")
+    store.cancel("k2", b.id)
+    with pytest.raises(NotFound):
+        store.reschedule("k3", b.id, "monday", "09:00")

@@ -155,14 +155,45 @@ class BookingStore:
 
         return self._idempotent(key, {"op": "book", "name": name, "day": day, "time": time}, run)
 
-    def get(self, booking_id: str) -> Booking:
-        with closing(self._connect()) as conn:
-            row = conn.execute(
-                "select id, name, day, time, status from bookings where id = ?", (booking_id,)
-            ).fetchone()
+    def cancel(self, key: str, booking_id: str) -> Booking:
+        def run(conn):
+            booking = self._fetch(conn, booking_id)
+            conn.execute("update bookings set status = 'cancelled' where id = ?", (booking_id,))
+            booking.status = "cancelled"
+            return booking
+
+        return self._idempotent(key, {"op": "cancel", "id": booking_id}, run)
+
+    def reschedule(self, key: str, booking_id: str, day: str, time: str) -> Booking:
+        day, time = normalize_slot(day, time)
+
+        def run(conn):
+            booking = self._fetch(conn, booking_id)
+            if booking.status != "confirmed":
+                raise NotFound(f"{booking_id} was cancelled")
+            try:
+                conn.execute(
+                    "update bookings set day = ?, time = ? where id = ?", (day, time, booking_id)
+                )
+            except sqlite3.IntegrityError:
+                raise SlotTaken(f"{day} {time} is already booked") from None
+            booking.day, booking.time = day, time
+            return booking
+
+        request = {"op": "reschedule", "id": booking_id, "day": day, "time": time}
+        return self._idempotent(key, request, run)
+
+    def _fetch(self, conn: sqlite3.Connection, booking_id: str) -> Booking:
+        row = conn.execute(
+            "select id, name, day, time, status from bookings where id = ?", (booking_id,)
+        ).fetchone()
         if not row:
             raise NotFound(booking_id)
         return Booking(**row)
+
+    def get(self, booking_id: str) -> Booking:
+        with closing(self._connect()) as conn:
+            return self._fetch(conn, booking_id)
 
     def bookings(self, status: str | None = None) -> list[Booking]:
         sql = "select id, name, day, time, status from bookings"
