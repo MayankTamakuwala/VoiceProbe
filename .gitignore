@@ -221,3 +221,7 @@ __marimo__/
 
 # downloaded voice / stt models
 models/
+
+# local runtime output
+data/
+out/
