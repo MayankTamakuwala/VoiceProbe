@@ -39,6 +39,44 @@ def cmd_transcribe(args):
     print(f"({time.perf_counter() - start:.2f}s)")
 
 
+def cmd_chat(args):
+    import asyncio
+    import uuid
+
+    from voiceprobe.agent.dialog import GREETING, Dialog
+    from voiceprobe.agent.llm import Ollama
+    from voiceprobe.agent.tools import BookingTools
+
+    async def run():
+        llm = Ollama()
+        tools = BookingTools(f"chat-{uuid.uuid4().hex[:6]}")
+        dialog = Dialog(llm, tools)
+        await llm.warmup()
+        print(f"agent> {GREETING}")
+        try:
+            while True:
+                try:
+                    line = await asyncio.to_thread(input, "you> ")
+                except EOFError:
+                    break
+                if not line.strip():
+                    continue
+                start = time.perf_counter()
+                first = None
+                async for sentence in dialog.reply(line):
+                    first = first or time.perf_counter() - start
+                    print(f"agent> {sentence}")
+                if args.timing and first:
+                    print(f"  (first sentence {first * 1000:.0f}ms)")
+            for t in tools.history:
+                print(f"tool {t.name} {t.arguments} -> {t.result}")
+        finally:
+            await llm.close()
+            await tools.close()
+
+    asyncio.run(run())
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="voiceprobe")
     parser.add_argument("-v", "--verbose", action="store_true")
@@ -60,6 +98,10 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("path")
     p.add_argument("--model")
     p.set_defaults(func=cmd_transcribe)
+
+    p = sub.add_parser("chat", help="text chat with the agent (needs the booking api running)")
+    p.add_argument("--timing", action="store_true")
+    p.set_defaults(func=cmd_chat)
 
     return parser
 
