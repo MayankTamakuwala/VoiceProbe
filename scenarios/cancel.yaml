@@ -1,0 +1,10 @@
+id: cancel
+description: Books, then realizes they can't make it and cancels.
+name: Owen Grant
+goal:
+  - Book Monday at 2pm.
+  - After it's booked, say you just remembered a work meeting and ask to cancel it.
+  - Once it's cancelled, say goodbye.
+expect:
+  no_booking: true
+  tools: [book_appointment, cancel_appointment]

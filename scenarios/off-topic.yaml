@@ -1,0 +1,11 @@
+id: off-topic
+description: Asks a question the agent has no tool for before booking.
+name: Ruth Okafor
+style: Chatty, older caller.
+goal:
+  - First ask whether the clinic takes Delta Dental insurance.
+  - Then book Friday at 4pm.
+  - Say goodbye once it's booked.
+expect:
+  booking: {name: Ruth Okafor, day: friday, time: "16:00"}
+  tools: [book_appointment]

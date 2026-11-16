@@ -1,0 +1,14 @@
+id: interrupt-correction
+description: Caller cuts the agent off mid answer to correct the day.
+name: Lena Park
+interrupts:
+  - after_turn: 1
+    after_ms: 1500
+    say: Sorry, sorry, I meant Friday, not Monday.
+goal:
+  - Ask what's free on Monday morning.
+  - You will interrupt to switch to Friday. Book Friday at 10am.
+  - Say goodbye once it's booked.
+expect:
+  booking: {name: Lena Park, day: friday, time: "10:00"}
+  tools: [book_appointment]

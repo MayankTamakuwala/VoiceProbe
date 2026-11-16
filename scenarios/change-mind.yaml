@@ -1,0 +1,12 @@
+id: change-mind
+description: Books one slot, then moves it. Should reschedule, not double book.
+name: Marcus Bell
+style: A bit scattered, changes plans easily.
+goal:
+  - Book a checkup for Tuesday at 3pm.
+  - Right after it's booked, change your mind and ask to move it to Wednesday at 10am instead.
+  - When the move is confirmed, say goodbye.
+expect:
+  booking: {name: Marcus Bell, day: wednesday, time: "10:00"}
+  tools: [book_appointment, reschedule_appointment]
+  forbidden_tools: [cancel_appointment]

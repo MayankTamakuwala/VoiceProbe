@@ -1,0 +1,15 @@
+id: interrupt-greeting
+description: Caller talks over the greeting. Agent should stop and listen.
+name: Tom Reyes
+style: Impatient, in a hurry.
+interrupts:
+  - after_turn: 0
+    after_ms: 1200
+    say: Hi, yeah, I need Monday at 9am please.
+goal:
+  - You want Monday at 9am. You already asked for it, so wait for the receptionist's reply.
+  - Give your name if asked and confirm the booking.
+  - Say goodbye once it's booked.
+expect:
+  booking: {name: Tom Reyes, day: monday, time: "09:00"}
+  tools: [book_appointment]

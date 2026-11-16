@@ -1,0 +1,12 @@
+id: slot-taken
+description: The slot the caller wants is already gone, agent has to offer another.
+name: Dana Lopez
+existing_bookings:
+  - {name: Alex Kim, day: thursday, time: "11:00"}
+goal:
+  - Ask for Thursday at 11am.
+  - If that's not available, accept another time on Thursday.
+  - Once something is booked, say goodbye.
+expect:
+  booking: {name: Dana Lopez, day: thursday}
+  tools: [book_appointment]
