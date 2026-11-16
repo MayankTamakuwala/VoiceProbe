@@ -75,3 +75,9 @@ async def test_bare_end_means_hang_up():
     assert await caller.next_line("Goodbye!") == ""
     assert caller.done
     assert len(llm.calls) == 1
+
+
+async def test_goodbye_without_marker_ends():
+    caller = Caller(scenario(), FakeLlm(["Great, thanks, bye!"]))
+    await caller.next_line("You're booked.")
+    assert caller.done

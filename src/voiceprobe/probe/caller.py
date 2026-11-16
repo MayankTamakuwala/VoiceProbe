@@ -9,6 +9,7 @@ You are {name}. {style}
 
 What you want from this call, in order:
 {goals}
+Work through these one at a time. Don't bring up the next one until the current one is done.
 
 How to behave:
 - Talk like a real person on the phone: one or two short sentences per turn.
@@ -16,9 +17,11 @@ How to behave:
 - Give your name when asked. Don't make up other details unless needed.
 - If the receptionist can't do what you asked, react like a normal person would.
 - When everything you wanted is done, say a short goodbye and then write [END].
+  Don't keep thanking the receptionist back and forth, just end the call.
 """
 
 _END = re.compile(r"\[\s*end\s*\]", re.IGNORECASE)
+_BYE = re.compile(r"\b(good)?bye\b", re.IGNORECASE)
 _LABEL = re.compile(r"^\s*(caller|me|you|[A-Z][a-z]+(?: [A-Z][a-z]+)?)\s*:\s*")
 _STAGE = re.compile(r"\*[^*]*\*|\([^)]*\)")
 
@@ -56,7 +59,8 @@ class Caller:
             line = "Sorry, could you say that again?"
         self.messages.append({"role": "assistant", "content": line or "[END]"})
         self.turns += 1
-        if ended or self.turns >= self.scenario.max_turns:
+        # the 8b model often forgets [END], a goodbye is just as final
+        if ended or _BYE.search(line) or self.turns >= self.scenario.max_turns:
             self.done = True
         return line
 
