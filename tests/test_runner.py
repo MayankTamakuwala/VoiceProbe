@@ -23,10 +23,10 @@ def test_trim_drops_padding():
     assert abs(pcm.duration(out) - pcm.duration(tone)) < 0.05
 
 
-async def run_call(host, scenario, caller_lines, speech_models):
+async def run_call(host, scenario, caller_lines, speech_models, **kw):
     stt, tts = speech_models
     caller = Caller(scenario, FakeCallerLlm(caller_lines))
-    runner = CallRunner(scenario, ReferenceAdapter(f"ws://{host}/call"), caller, tts, stt)
+    runner = CallRunner(scenario, ReferenceAdapter(f"ws://{host}/call"), caller, tts, stt, **kw)
     return await runner.run()
 
 
@@ -66,7 +66,9 @@ async def test_barge_in_on_greeting(start_agent, speech_models):
             "interrupts": [{"after_turn": 0, "after_ms": 1000, "say": "Hi, I need Monday at 9."}],
         }
     )
-    rec = await run_call(host, scenario, ["[END]"], speech_models)
+    # the reply to the barge-in lands after the greeting timeout, that's fine
+    rec = await run_call(host, scenario, ["[END]"], speech_models, greeting_timeout=2)
+    assert rec.ended_by == "caller", rec.errors
 
     greeting = rec.agent_turns[0]
     assert greeting.interrupted_at is not None

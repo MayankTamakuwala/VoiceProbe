@@ -130,10 +130,16 @@ class CallRunner:
             with suppress(Exception):
                 await self.adapter.close()
             self.record.duration = round(self.now(), 3)
+            if self.agent and self.agent.end is None:
+                self.agent.end = round(min(self.playout_end, self.record.duration), 3)
         return self.record
 
     async def _converse(self) -> str:
-        if not await self._wait_ready(self.greeting_timeout):
+        ready = await self._wait_ready(self.greeting_timeout)
+        if not ready and self.record.agent_turns:
+            # greeting started but we barged in, give the agent time to answer that
+            ready = await self._wait_ready(self.reply_timeout)
+        if not ready:
             if self.record.agent_turns:
                 return "no_reply"
             # no greeting, caller goes first
@@ -242,7 +248,7 @@ class CallRunner:
 
     def _on_audio(self, frame: bytes, now: float) -> None:
         if self.agent is None:
-            self.agent = AgentTurn(len(self.record.agent_turns), max(now, self.playout_end))
+            self.agent = AgentTurn(len(self.record.agent_turns), round(max(now, self.playout_end), 3))
             self.record.agent_turns.append(self.agent)
             self.agent.text, self.early_text = self.early_text, []
             self.turn_end_flag = False
