@@ -18,11 +18,13 @@ class Ollama:
         host: str | None = None,
         model: str | None = None,
         temperature: float = 0.3,
+        seed: int | None = None,
         client: httpx.AsyncClient | None = None,
     ):
         self.host = (host or os.getenv("OLLAMA_HOST", "http://localhost:11434")).rstrip("/")
         self.model = model or os.getenv("OLLAMA_MODEL", "llama3.1:8b")
         self.temperature = temperature
+        self.seed = seed
         self.client = client or httpx.AsyncClient(timeout=httpx.Timeout(60.0, connect=5.0))
 
     async def chat(
@@ -35,6 +37,8 @@ class Ollama:
             "keep_alive": "30m",
             "options": {"temperature": self.temperature},
         }
+        if self.seed is not None:
+            payload["options"]["seed"] = self.seed
         if tools:
             payload["tools"] = tools
 
