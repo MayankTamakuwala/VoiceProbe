@@ -77,6 +77,25 @@ def cmd_chat(args):
     asyncio.run(run())
 
 
+def cmd_agent(args):
+    import uvicorn
+
+    from voiceprobe.agent.server import create_app
+
+    uvicorn.run(create_app(), host=args.host, port=args.port, ws_max_size=1 << 20)
+
+
+def cmd_dial(args):
+    import asyncio
+
+    from voiceprobe.probe.dial import dial
+
+    latencies = asyncio.run(dial(args.url, args.lines, args.out))
+    if latencies:
+        ms = sorted(x * 1000 for x in latencies)
+        print(f"time to first audio: min {ms[0]:.0f}ms, max {ms[-1]:.0f}ms over {len(ms)} turns")
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="voiceprobe")
     parser.add_argument("-v", "--verbose", action="store_true")
@@ -102,6 +121,17 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("chat", help="text chat with the agent (needs the booking api running)")
     p.add_argument("--timing", action="store_true")
     p.set_defaults(func=cmd_chat)
+
+    p = sub.add_parser("agent", help="run the reference voice agent")
+    p.add_argument("--host", default=os.getenv("AGENT_HOST", "127.0.0.1"))
+    p.add_argument("--port", type=int, default=int(os.getenv("AGENT_PORT", "8000")))
+    p.set_defaults(func=cmd_agent)
+
+    p = sub.add_parser("dial", help="speak a few lines at an agent and print the replies")
+    p.add_argument("lines", nargs="+")
+    p.add_argument("--url", default="ws://127.0.0.1:8000/call")
+    p.add_argument("-o", "--out", help="save the agent's audio to a wav")
+    p.set_defaults(func=cmd_dial)
 
     return parser
 
