@@ -41,11 +41,11 @@ def start_agent(tmp_path, speech_models):
 
     servers = []
 
-    def start(turns):
+    def start(turns, booking_app=None):
         stt, tts = speech_models
+        booking_app = booking_app or create_booking_app(str(tmp_path / "b.db"))
         booking = httpx.AsyncClient(
-            transport=httpx.ASGITransport(app=create_booking_app(str(tmp_path / "b.db"))),
-            base_url="http://booking",
+            transport=httpx.ASGITransport(app=booking_app), base_url="http://booking"
         )
         models = Models(stt=stt, tts=tts, llm=ScriptedLlm(turns), booking=booking)
         server = uvicorn.Server(

@@ -96,6 +96,56 @@ def cmd_dial(args):
         print(f"time to first audio: min {ms[0]:.0f}ms, max {ms[-1]:.0f}ms over {len(ms)} turns")
 
 
+def cmd_run(args):
+    import asyncio
+
+    from voiceprobe.agent.llm import Ollama
+    from voiceprobe.audio.stt import Stt
+    from voiceprobe.audio.tts import Tts
+    from voiceprobe.probe.adapters import ReferenceAdapter
+    from voiceprobe.probe.scenario import load_all
+    from voiceprobe.probe.suite import Bookings, run_dir, run_suite
+
+    scenarios = load_all(args.scenarios)
+    if args.only:
+        scenarios = [s for s in scenarios if s.id in args.only]
+    if not scenarios:
+        raise SystemExit("no scenarios to run")
+
+    async def run():
+        llm = Ollama(temperature=args.temperature, seed=args.seed)
+        bookings = Bookings(args.booking_url)
+        out = run_dir(args.out, args.label)
+        try:
+            await llm.warmup()
+            stt = Stt() if args.hear == "audio" else None
+            results = await run_suite(
+                scenarios,
+                lambda: ReferenceAdapter(args.url),
+                llm,
+                Tts(),
+                stt,
+                bookings=bookings,
+                out=out,
+                hear=args.hear,
+                repeat=args.repeat,
+            )
+        finally:
+            await llm.close()
+            await bookings.close()
+
+        for r in results:
+            rec = r["record"]
+            tools = ", ".join(c["name"] for c in rec["tool_calls"]) or "-"
+            print(
+                f"{rec['scenario']:22} {rec['ended_by']:12} {rec['duration']:6.1f}s "
+                f"{len(rec['caller_turns']):2d} turns  tools: {tools}"
+            )
+        print(f"saved to {out}")
+
+    asyncio.run(run())
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="voiceprobe")
     parser.add_argument("-v", "--verbose", action="store_true")
@@ -132,6 +182,20 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--url", default="ws://127.0.0.1:8000/call")
     p.add_argument("-o", "--out", help="save the agent's audio to a wav")
     p.set_defaults(func=cmd_dial)
+
+    p = sub.add_parser("run", help="run scenarios against an agent and save the calls")
+    p.add_argument("scenarios", nargs="*", default=["scenarios"])
+    p.add_argument("--only", nargs="+", help="scenario ids to run")
+    p.add_argument("--url", default="ws://127.0.0.1:8000/call")
+    p.add_argument("--booking-url", default=os.getenv("BOOKING_URL", "http://127.0.0.1:8001"))
+    p.add_argument("--hear", choices=["text", "audio"], default="text",
+                   help="what the caller reacts to: the agent's text events or its transcribed audio")
+    p.add_argument("--repeat", type=int, default=1)
+    p.add_argument("--temperature", type=float, default=0.7)
+    p.add_argument("--seed", type=int)
+    p.add_argument("--label", default="")
+    p.add_argument("-o", "--out", default="out/runs")
+    p.set_defaults(func=cmd_run)
 
     return parser
 

@@ -71,4 +71,10 @@ def create_app(db_path: str | None = None) -> FastAPI:
     def reschedule(booking_id: str, req: SlotRequest, key: str = Depends(idempotency_key)):
         return asdict(store.reschedule(key, booking_id, req.day, req.time))
 
+    # used by the test harness to start every call from a known state
+    @app.post("/admin/reset")
+    def reset():
+        store.reset()
+        return {"ok": True}
+
     return app

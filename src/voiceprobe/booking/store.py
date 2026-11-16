@@ -183,6 +183,11 @@ class BookingStore:
         request = {"op": "reschedule", "id": booking_id, "day": day, "time": time}
         return self._idempotent(key, request, run)
 
+    def reset(self) -> None:
+        with self._tx() as conn:
+            conn.execute("delete from bookings")
+            conn.execute("delete from idempotency")
+
     def _fetch(self, conn: sqlite3.Connection, booking_id: str) -> Booking:
         row = conn.execute(
             "select id, name, day, time, status from bookings where id = ?", (booking_id,)

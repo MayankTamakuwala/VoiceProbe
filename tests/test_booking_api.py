@@ -59,3 +59,11 @@ def test_reschedule_and_cancel(client):
 
 def test_unknown_booking(client):
     assert client.get("/bookings/nope").status_code == 404
+
+
+def test_reset(client):
+    book(client)
+    assert client.post("/admin/reset").json() == {"ok": True}
+    assert client.get("/bookings").json() == []
+    # keys are forgotten too, so the same key books again
+    assert book(client).status_code == 201
