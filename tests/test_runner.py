@@ -100,3 +100,13 @@ async def test_timeout_only_counts_quiet_time(start_agent, speech_models):
     assert rec.ended_by == "caller", rec.errors
     assert [t.kind for t in rec.caller_turns] == ["turn", "interrupt"]
     assert rec.agent_turns[-1].text == ["Friday at ten works."]
+
+
+async def test_silence_after_goodbye_is_fine(start_agent, speech_models):
+    # agent already said bye, so it says nothing to the caller's bye
+    host = start_agent([["Okay, you're all set. Bye!"], []])
+    scenario = parse({"id": "bye", "goal": "x"})
+    lines = ["Just checking my booking is still on.", "Great, goodbye."]
+    rec = await run_call(host, scenario, lines, speech_models, reply_timeout=3)
+    assert rec.ended_by == "caller", rec.errors
+    assert rec.caller_turns[-1].first_audio is None

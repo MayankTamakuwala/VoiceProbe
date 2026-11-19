@@ -1,0 +1,223 @@
+{
+  "record": {
+    "scenario": "change-mind",
+    "call_id": "change-mind-16d7d4",
+    "agent": "reference",
+    "started_at": 1794944359.9527922,
+    "duration": 80.632,
+    "ended_by": "caller",
+    "caller_turns": [
+      {
+        "text": "I'd like to book a checkup, please. My name is Marcus Bell.",
+        "kind": "turn",
+        "start": 5.664,
+        "end": 8.965,
+        "heard_as": "I'd like to book a checkup, please. My name is Marcus Bell.",
+        "first_audio": 11.339
+      },
+      {
+        "text": "I was thinking maybe Tuesday at 3pm, that works for me.",
+        "kind": "turn",
+        "start": 19.804,
+        "end": 23.104,
+        "heard_as": "I was thinking maybe Tuesday at 3pm, that works for me.",
+        "first_audio": 27.035
+      },
+      {
+        "text": "Wait, actually, can I change that? I just remembered I have a meeting on Tuesday, can I move it to Wednesday instead?",
+        "kind": "turn",
+        "start": 37.904,
+        "end": 44.404,
+        "heard_as": "Wait, actually, can I change that? I just remembered I have a meeting on Tuesday. Can I move it to Wednesday instead?",
+        "first_audio": 48.448
+      },
+      {
+        "text": "Wednesday at 10am would be great, thanks.",
+        "kind": "turn",
+        "start": 56.663,
+        "end": 59.267,
+        "heard_as": "Wednesday at 10 a.m. would be great. Thanks.",
+        "first_audio": 64.136
+      },
+      {
+        "text": "Thanks, see you then.",
+        "kind": "turn",
+        "start": 73.204,
+        "end": 74.565,
+        "heard_as": "Thanks. See you then.",
+        "first_audio": 78.918
+      }
+    ],
+    "agent_turns": [
+      {
+        "index": 0,
+        "start": 0.116,
+        "end": 3.036,
+        "text": [
+          "Thanks for calling Maple Dental, how can I help you today?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 1,
+        "start": 11.339,
+        "end": 18.243,
+        "text": [
+          "Let me check.",
+          "We have availability on Monday.",
+          "What time would you like to book your checkup, Marcus?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 2,
+        "start": 27.035,
+        "end": 35.596,
+        "text": [
+          "Let me check.",
+          "We have availability at 3 pm on Tuesday.",
+          "Would you like to book your checkup for Tuesday at 3 pm, Marcus?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 3,
+        "start": 48.448,
+        "end": 55.405,
+        "text": [
+          "Let me check.",
+          "We have availability on Wednesday.",
+          "What time would you like to book your checkup now, Marcus?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 4,
+        "start": 64.136,
+        "end": 72.267,
+        "text": [
+          "One moment, booking that now.",
+          "Your checkup is booked for Wednesday at 10 a.m. We'll see you then, Marcus."
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 5,
+        "start": 78.918,
+        "end": 80.238,
+        "text": [
+          "Goodbye, Marcus."
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      }
+    ],
+    "tool_calls": [
+      {
+        "t": 13.118,
+        "name": "check_availability",
+        "arguments": {
+          "day": "monday"
+        },
+        "result": {
+          "day": "monday",
+          "available": [
+            "09:00",
+            "10:00",
+            "11:00",
+            "12:00",
+            "13:00",
+            "14:00",
+            "15:00",
+            "16:00"
+          ]
+        },
+        "ms": 14.247000013710931,
+        "attempts": 1
+      },
+      {
+        "t": 28.838,
+        "name": "check_availability",
+        "arguments": {
+          "day": "tuesday"
+        },
+        "result": {
+          "day": "tuesday",
+          "available": [
+            "09:00",
+            "10:00",
+            "11:00",
+            "12:00",
+            "13:00",
+            "14:00",
+            "15:00",
+            "16:00"
+          ]
+        },
+        "ms": 18.477499979780987,
+        "attempts": 1
+      },
+      {
+        "t": 50.182,
+        "name": "check_availability",
+        "arguments": {
+          "day": "wednesday"
+        },
+        "result": {
+          "day": "wednesday",
+          "available": [
+            "09:00",
+            "10:00",
+            "11:00",
+            "12:00",
+            "13:00",
+            "14:00",
+            "15:00",
+            "16:00"
+          ]
+        },
+        "ms": 17.312957992544398,
+        "attempts": 1
+      },
+      {
+        "t": 68.107,
+        "name": "book_appointment",
+        "arguments": {
+          "day": "wednesday",
+          "name": "Marcus Bell",
+          "time": "10:00"
+        },
+        "result": {
+          "id": "41f8d7da",
+          "name": "Marcus Bell",
+          "day": "wednesday",
+          "time": "10:00",
+          "status": "confirmed"
+        },
+        "ms": 19.9265829869546,
+        "attempts": 1
+      }
+    ],
+    "errors": []
+  },
+  "bookings": [
+    {
+      "id": "41f8d7da",
+      "name": "Marcus Bell",
+      "day": "wednesday",
+      "time": "10:00",
+      "status": "confirmed"
+    }
+  ]
+}

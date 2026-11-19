@@ -1,0 +1,132 @@
+{
+  "record": {
+    "scenario": "interrupt-greeting",
+    "call_id": "interrupt-greeting-94962c",
+    "agent": "elevenlabs",
+    "started_at": 1795068306.524343,
+    "duration": 40.385,
+    "ended_by": "caller",
+    "caller_turns": [
+      {
+        "text": "Hi, yeah, I need Monday at 9am please.",
+        "kind": "interrupt",
+        "start": 1.958,
+        "end": 4.778,
+        "heard_as": "I need Monday at 9:00 a.m., please.",
+        "first_audio": 6.635
+      },
+      {
+        "text": "It's Tom Reyes.",
+        "kind": "turn",
+        "start": 12.178,
+        "end": 13.138,
+        "heard_as": "It's Tom Reyes.",
+        "first_audio": 14.818
+      },
+      {
+        "text": "Yes, that's correct.",
+        "kind": "turn",
+        "start": 21.377,
+        "end": 22.658,
+        "heard_as": "Yes, that's correct.",
+        "first_audio": 24.831
+      },
+      {
+        "text": "Good, thank you.",
+        "kind": "turn",
+        "start": 33.658,
+        "end": 34.497,
+        "heard_as": "Good. Thank you.",
+        "first_audio": 35.602
+      }
+    ],
+    "agent_turns": [
+      {
+        "index": 0,
+        "start": 0.615,
+        "end": 3.575,
+        "text": [
+          "Thanks for calling Maple Dental, how can I help you today?"
+        ],
+        "interrupted_at": 1.958,
+        "stopped_ms": 1617,
+        "flagged": false
+      },
+      {
+        "index": 1,
+        "start": 6.635,
+        "end": 9.675,
+        "text": [
+          "Okay, and what name should I put that under?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 2,
+        "start": 14.818,
+        "end": 19.138,
+        "text": [
+          "So that's Tom Reyes, for Monday at nine a.m. Is that right?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 3,
+        "start": 24.831,
+        "end": 31.231,
+        "text": [
+          "Alright, Mr. Reyes, your appointment is all set for Monday at nine a.m. We look forward to seeing you then."
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 4,
+        "start": 35.602,
+        "end": 38.322,
+        "text": [
+          "You're welcome. Have a great day!"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      }
+    ],
+    "tool_calls": [
+      {
+        "t": 23.875,
+        "name": "book_appointment",
+        "arguments": {
+          "name": "Tom Reyes",
+          "day": "monday",
+          "time": "09:00"
+        },
+        "result": {
+          "id": "3db310e7",
+          "name": "Tom Reyes",
+          "day": "monday",
+          "time": "09:00",
+          "status": "confirmed"
+        },
+        "ms": 27.574708001338877,
+        "attempts": 1,
+        "blocked": false
+      }
+    ],
+    "errors": []
+  },
+  "bookings": [
+    {
+      "id": "3db310e7",
+      "name": "Tom Reyes",
+      "day": "monday",
+      "time": "09:00",
+      "status": "confirmed"
+    }
+  ]
+}

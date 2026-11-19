@@ -1,0 +1,113 @@
+{
+  "record": {
+    "scenario": "interrupt-correction",
+    "call_id": "interrupt-correction-877795",
+    "agent": "reference",
+    "started_at": 1794944440.596472,
+    "duration": 36.83,
+    "ended_by": "no_reply",
+    "caller_turns": [
+      {
+        "text": "Hi, I'm Lena Park. I'm looking for an appointment on Monday morning, what times are free?",
+        "kind": "turn",
+        "start": 6.803,
+        "end": 12.026,
+        "heard_as": "Hi, I'm Leena Park. I'm looking for an appointment on Monday morning. What times are free?",
+        "first_audio": 15.1
+      },
+      {
+        "text": "Sorry, sorry, I meant Friday, not Monday.",
+        "kind": "interrupt",
+        "start": 19.644,
+        "end": 22.365,
+        "heard_as": "Sorry, sorry, I meant Friday, not Monday.",
+        "first_audio": 26.427
+      }
+    ],
+    "agent_turns": [
+      {
+        "index": 0,
+        "start": 0.116,
+        "end": 3.216,
+        "text": [
+          "Thanks for calling Maple Dental, how can I help you today?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 1,
+        "start": 15.1,
+        "end": 19.825,
+        "text": [
+          "Let me check.",
+          "Good morning Leena, we have availability at 9 am, 10 am, 11 am, 12 pm, 1 pm, 2 pm, 3 pm and 4 pm on Monday."
+        ],
+        "interrupted_at": 19.644,
+        "stopped_ms": 181,
+        "flagged": true
+      },
+      {
+        "index": 2,
+        "start": 26.427,
+        "end": 36.83,
+        "text": [
+          "Let me check.",
+          "So on Friday, the available times are 9 am, 10 am, 11 am, 12 pm, 1 pm, 2 pm, 3 pm, and 4 pm."
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      }
+    ],
+    "tool_calls": [
+      {
+        "t": 18.941,
+        "name": "check_availability",
+        "arguments": {
+          "day": "Monday"
+        },
+        "result": {
+          "day": "monday",
+          "available": [
+            "09:00",
+            "10:00",
+            "11:00",
+            "12:00",
+            "13:00",
+            "14:00",
+            "15:00",
+            "16:00"
+          ]
+        },
+        "ms": 20.65187500556931,
+        "attempts": 1
+      },
+      {
+        "t": 29.544,
+        "name": "check_availability",
+        "arguments": {
+          "day": "Friday"
+        },
+        "result": {
+          "day": "friday",
+          "available": [
+            "09:00",
+            "10:00",
+            "11:00",
+            "12:00",
+            "13:00",
+            "14:00",
+            "15:00",
+            "16:00"
+          ]
+        },
+        "ms": 13.035375013714656,
+        "attempts": 1
+      }
+    ],
+    "errors": []
+  },
+  "bookings": []
+}

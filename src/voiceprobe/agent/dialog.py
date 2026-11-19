@@ -102,25 +102,17 @@ class Dialog:
 
             if not calls:
                 return
-            if not said and calls[0].name in FILLERS:
+            # check first, so we don't say "booking that now" and then not book
+            problems = [self._check(c) for c in calls]
+            if not said and problems[0] is None and calls[0].name in FILLERS:
                 filler = FILLERS[calls[0].name]
                 self.messages[-1]["content"] = filler
                 yield filler
-            for call in calls:
+            for call, problem in zip(calls, problems):
                 log.info("tool %s %s", call.name, call.arguments)
-                if call.name == "cancel_appointment" and not self._cancel_requested():
-                    # 8b models love to "cancel" on goodbye, don't trust them with it
-                    log.warning("blocked cancel, caller said: %r", user_text)
-                    result = self.tools.blocked(
-                        call.name, call.arguments, "caller did not ask to cancel, booking kept"
-                    )
-                elif call.name == "book_appointment" and not _name_given(
-                    str(call.arguments.get("name", "")), self._caller_said()
-                ):
-                    # it will happily book under "caller" or a made up name
-                    log.warning("blocked booking under %r", call.arguments.get("name"))
-                    reason = "the caller hasn't told you their name yet, ask for it first"
-                    result = self.tools.blocked(call.name, call.arguments, reason)
+                if problem:
+                    log.warning("blocked %s %s: %s", call.name, call.arguments, problem)
+                    result = self.tools.blocked(call.name, call.arguments, problem)
                 else:
                     result = await self.tools.run(call.name, call.arguments)
                 self.messages.append(
@@ -128,6 +120,17 @@ class Dialog:
                 )
 
         log.warning("hit max tool rounds")
+
+    def _check(self, call: ToolCall) -> str | None:
+        if call.name == "cancel_appointment" and not self._cancel_requested():
+            # 8b models love to "cancel" on goodbye, don't trust them with it
+            return "caller did not ask to cancel, booking kept"
+        if call.name == "book_appointment" and not _name_given(
+            str(call.arguments.get("name", "")), self._caller_said()
+        ):
+            # it will happily book under "caller" or a made up name
+            return "the caller hasn't told you their name yet, ask for it first"
+        return None
 
     def _caller_said(self) -> str:
         return " ".join(m["content"] for m in self.messages if m["role"] == "user")

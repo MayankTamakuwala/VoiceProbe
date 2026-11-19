@@ -1,0 +1,193 @@
+{
+  "record": {
+    "scenario": "off-topic",
+    "call_id": "off-topic-2ba9d9",
+    "agent": "elevenlabs",
+    "started_at": 1795068346.928235,
+    "duration": 80.344,
+    "ended_by": "caller",
+    "caller_turns": [
+      {
+        "text": "Hi, my name is Ruth Okafor. I just wanted to know if you take Delta Dental insurance?",
+        "kind": "turn",
+        "start": 7.006,
+        "end": 11.727,
+        "heard_as": "Hi, my name is Ruth Okafor. I just wanted to know if you take Delta Dental Insurance?",
+        "first_audio": 12.868
+      },
+      {
+        "text": "Good, that's great. I'd like to book an appointment, yes.",
+        "kind": "turn",
+        "start": 22.187,
+        "end": 25.451,
+        "heard_as": "Good. That's great. I'd like to book an appointment. Yes.",
+        "first_audio": 26.333
+      },
+      {
+        "text": "Friday would be perfect, thank you.",
+        "kind": "turn",
+        "start": 33.846,
+        "end": 35.787,
+        "heard_as": "Friday would be perfect. Thank you.",
+        "first_audio": 37.62
+      },
+      {
+        "text": "Four o'clock would be great, that fits my schedule.",
+        "kind": "turn",
+        "start": 46.266,
+        "end": 48.907,
+        "heard_as": "Four o'clock would be great. That fits my schedule.",
+        "first_audio": 49.939
+      },
+      {
+        "text": "Yes, that's correct.",
+        "kind": "turn",
+        "start": 58.906,
+        "end": 60.087,
+        "heard_as": "Yes, that's correct.",
+        "first_audio": 62.031
+      },
+      {
+        "text": "Thanks so much, I'm looking forward to it.",
+        "kind": "turn",
+        "start": 70.786,
+        "end": 73.088,
+        "heard_as": "Thanks so much. I'm looking forward to it.",
+        "first_audio": 74.273
+      }
+    ],
+    "agent_turns": [
+      {
+        "index": 0,
+        "start": 0.656,
+        "end": 3.696,
+        "text": [
+          "Thanks for calling Maple Dental, how can I help you today?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 1,
+        "start": 12.868,
+        "end": 19.188,
+        "text": [
+          "Hello Ruth! Yes, we do accept Delta Dental Insurance. Are you looking to book an appointment with us today?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 2,
+        "start": 26.333,
+        "end": 31.453,
+        "text": [
+          "I can certainly help you with that. Which day from Monday to Friday would work best for you?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 3,
+        "start": 37.62,
+        "end": 43.62,
+        "text": [
+          "We have openings on Friday every hour from nine am to four pm. What time works best for you?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 4,
+        "start": 49.939,
+        "end": 56.579,
+        "text": [
+          "Just to confirm, you would like to book an appointment for Ruth Okafor on Friday at four pm. Is that correct?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 5,
+        "start": 62.031,
+        "end": 67.951,
+        "text": [
+          "Great, your appointment is all booked for Friday at four pm. We look forward to seeing you then, Ruth!"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 6,
+        "start": 74.273,
+        "end": 78.753,
+        "text": [
+          "You are very welcome! Have a wonderful day and we will see you on Friday."
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      }
+    ],
+    "tool_calls": [
+      {
+        "t": 36.857,
+        "name": "check_availability",
+        "arguments": {
+          "day": "Friday"
+        },
+        "result": {
+          "day": "friday",
+          "available": [
+            "09:00",
+            "10:00",
+            "11:00",
+            "12:00",
+            "13:00",
+            "14:00",
+            "15:00",
+            "16:00"
+          ]
+        },
+        "ms": 15.511792007600889,
+        "attempts": 1,
+        "blocked": false
+      },
+      {
+        "t": 61.218,
+        "name": "book_appointment",
+        "arguments": {
+          "name": "Ruth Okafor",
+          "day": "Friday",
+          "time": "16:00"
+        },
+        "result": {
+          "id": "1d2fdb92",
+          "name": "Ruth Okafor",
+          "day": "friday",
+          "time": "16:00",
+          "status": "confirmed"
+        },
+        "ms": 32.9659580020234,
+        "attempts": 1,
+        "blocked": false
+      }
+    ],
+    "errors": []
+  },
+  "bookings": [
+    {
+      "id": "1d2fdb92",
+      "name": "Ruth Okafor",
+      "day": "friday",
+      "time": "16:00",
+      "status": "confirmed"
+    }
+  ]
+}

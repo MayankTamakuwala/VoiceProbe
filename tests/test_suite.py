@@ -1,12 +1,13 @@
 import json
 
 import httpx
+import pytest
 
 from voiceprobe.agent.llm import ToolCall
 from voiceprobe.booking.api import create_app as create_booking_app
 from voiceprobe.probe.adapters import ReferenceAdapter
 from voiceprobe.probe.scenario import parse
-from voiceprobe.probe.suite import Bookings, run_suite
+from voiceprobe.probe.suite import Bookings, Busy, one_at_a_time, run_suite
 
 
 class Lines:
@@ -63,3 +64,14 @@ async def test_suite_seeds_and_saves(start_agent, speech_models, tmp_path):
     assert final == {("Alex Kim", "thursday", "11:00"), ("Dana Lopez", "thursday", "12:00")}
     saved = json.loads((tmp_path / "taken.json").read_text())
     assert saved["record"]["scenario"] == "taken"
+
+
+def test_one_run_at_a_time(tmp_path):
+    lock = tmp_path / "lock"
+    with one_at_a_time(lock):
+        with pytest.raises(Busy):
+            with one_at_a_time(lock):
+                pass
+    # free again once the first one is done
+    with one_at_a_time(lock):
+        pass

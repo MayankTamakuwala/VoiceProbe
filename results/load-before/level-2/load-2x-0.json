@@ -1,0 +1,110 @@
+{
+  "record": {
+    "scenario": "load-2",
+    "call_id": "load-2x-0",
+    "agent": "reference",
+    "started_at": 1795061238.9684212,
+    "duration": 45.198,
+    "ended_by": "caller",
+    "caller_turns": [
+      {
+        "text": "Hi, what times do you have free on Wednesday?",
+        "kind": "turn",
+        "start": 3.226,
+        "end": 6.046,
+        "heard_as": "Hi, what times do you have free on Wednesday?",
+        "first_audio": 8.353
+      },
+      {
+        "text": "Okay. Do you do teeth whitening there too?",
+        "kind": "turn",
+        "start": 21.686,
+        "end": 24.126,
+        "heard_as": "Okay, do you do teeth whitening there too?",
+        "first_audio": 28.584
+      },
+      {
+        "text": "Alright, thanks, bye.",
+        "kind": "turn",
+        "start": 34.406,
+        "end": 35.926,
+        "heard_as": "Alright, thanks, bye.",
+        "first_audio": 41.372
+      }
+    ],
+    "agent_turns": [
+      {
+        "index": 0,
+        "start": 0.128,
+        "end": 3.168,
+        "text": [
+          "Thanks for calling Maple Dental, how can I help you today?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 1,
+        "start": 8.353,
+        "end": 21.643,
+        "text": [
+          "Let me check.",
+          "We have availability on Wednesday at 9 am, 10 am, 11 am, 12 pm, 1 pm, 2 pm, 3 pm, and 4 pm."
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 2,
+        "start": 28.584,
+        "end": 34.384,
+        "text": [
+          "I'm happy to help, but you didn't ask about availability or book an appointment.",
+          "What else can I help you with?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 3,
+        "start": 41.372,
+        "end": 45.152,
+        "text": [
+          "No need to cancel anything, thanks for calling Maple Dental, have a great day."
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      }
+    ],
+    "tool_calls": [
+      {
+        "t": 11.808,
+        "name": "check_availability",
+        "arguments": {
+          "day": "Wednesday"
+        },
+        "result": {
+          "day": "wednesday",
+          "available": [
+            "09:00",
+            "10:00",
+            "11:00",
+            "12:00",
+            "13:00",
+            "14:00",
+            "15:00",
+            "16:00"
+          ]
+        },
+        "ms": 9.6678330010036,
+        "attempts": 1
+      }
+    ],
+    "errors": []
+  },
+  "bookings": null
+}

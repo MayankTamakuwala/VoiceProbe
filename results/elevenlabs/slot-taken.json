@@ -1,0 +1,199 @@
+{
+  "record": {
+    "scenario": "slot-taken",
+    "call_id": "slot-taken-fa3171",
+    "agent": "elevenlabs",
+    "started_at": 1795068637.203487,
+    "duration": 72.008,
+    "ended_by": "caller",
+    "caller_turns": [
+      {
+        "text": "Hi, I'm Dana Lopez. I'm calling to schedule an appointment.",
+        "kind": "turn",
+        "start": 6.58,
+        "end": 9.962,
+        "heard_as": "Hi, I'm Dana Lopez. I'm calling to schedule an appointment.",
+        "first_audio": 10.904
+      },
+      {
+        "text": "Thursday would be good.",
+        "kind": "turn",
+        "start": 16.081,
+        "end": 17.241,
+        "heard_as": "Thursday would be good.",
+        "first_audio": 19.114
+      },
+      {
+        "text": "Is 11 am available?",
+        "kind": "turn",
+        "start": 31.501,
+        "end": 32.705,
+        "heard_as": "Is 11 am available?",
+        "first_audio": 33.77
+      },
+      {
+        "text": "12 pm would be great, thank you.",
+        "kind": "turn",
+        "start": 43.421,
+        "end": 45.641,
+        "heard_as": "12 pm would be great. Thank you.",
+        "first_audio": 46.794
+      },
+      {
+        "text": "Yes, that's correct.",
+        "kind": "turn",
+        "start": 55.4,
+        "end": 56.661,
+        "heard_as": "Yes, that's correct.",
+        "first_audio": 58.561
+      },
+      {
+        "text": "Goodbye.",
+        "kind": "turn",
+        "start": 66.3,
+        "end": 66.781,
+        "heard_as": "Goodbye.",
+        "first_audio": 67.751
+      }
+    ],
+    "agent_turns": [
+      {
+        "index": 0,
+        "start": 0.687,
+        "end": 3.727,
+        "text": [
+          "Thanks for calling Maple Dental, how can I help you today?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 1,
+        "start": 10.904,
+        "end": 13.944,
+        "text": [
+          "Hi Dana! What day of the week would you like to come in?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 2,
+        "start": 19.114,
+        "end": 29.034,
+        "text": [
+          "We have openings on Thursday at 9 am, 10 am, 12 pm, 1 pm, 2 pm, 3 pm, and 4 pm. Do any of those work for you?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 3,
+        "start": 33.77,
+        "end": 40.81,
+        "text": [
+          "I'm sorry, 11 am is not available on Thursday. Would you like to try 10 am or 12 pm instead?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 4,
+        "start": 46.794,
+        "end": 53.114,
+        "text": [
+          "Perfect. So that is an appointment for Dana Lopez on Thursday at 12 pm. Is that correct?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 5,
+        "start": 58.561,
+        "end": 64.241,
+        "text": [
+          "Great, your appointment is all booked for Thursday at 12 pm. We look forward to seeing you then!"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 6,
+        "start": 67.751,
+        "end": 70.391,
+        "text": [
+          "Goodbye, Dana! Have a wonderful day!"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      }
+    ],
+    "tool_calls": [
+      {
+        "t": 18.247,
+        "name": "check_availability",
+        "arguments": {
+          "day": "Thursday"
+        },
+        "result": {
+          "day": "thursday",
+          "available": [
+            "09:00",
+            "10:00",
+            "12:00",
+            "13:00",
+            "14:00",
+            "15:00",
+            "16:00"
+          ]
+        },
+        "ms": 16.200708007090725,
+        "attempts": 1,
+        "blocked": false
+      },
+      {
+        "t": 57.801,
+        "name": "book_appointment",
+        "arguments": {
+          "name": "Dana Lopez",
+          "day": "Thursday",
+          "time": "12:00"
+        },
+        "result": {
+          "id": "042b3acd",
+          "name": "Dana Lopez",
+          "day": "thursday",
+          "time": "12:00",
+          "status": "confirmed"
+        },
+        "ms": 11.450584002886899,
+        "attempts": 1,
+        "blocked": false
+      }
+    ],
+    "errors": []
+  },
+  "bookings": [
+    {
+      "id": "f8992fe0",
+      "name": "Alex Kim",
+      "day": "thursday",
+      "time": "11:00",
+      "status": "confirmed"
+    },
+    {
+      "id": "042b3acd",
+      "name": "Dana Lopez",
+      "day": "thursday",
+      "time": "12:00",
+      "status": "confirmed"
+    }
+  ]
+}

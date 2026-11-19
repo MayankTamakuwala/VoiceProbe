@@ -1,0 +1,170 @@
+{
+  "record": {
+    "scenario": "cancel",
+    "call_id": "cancel-f46193",
+    "agent": "reference",
+    "started_at": 1794944290.7101598,
+    "duration": 69.227,
+    "ended_by": "caller",
+    "caller_turns": [
+      {
+        "text": "Hi, I'm Owen Grant. I'd like to book an appointment for Monday at 2pm.",
+        "kind": "turn",
+        "start": 7.217,
+        "end": 11.351,
+        "heard_as": "Hi, I'm Owen Grant. I'd like to book an appointment for Monday at 2pm.",
+        "first_audio": 14.595
+      },
+      {
+        "text": "Yes, that would be great, thanks.",
+        "kind": "turn",
+        "start": 27.673,
+        "end": 29.551,
+        "heard_as": "Yes, that would be great, thanks.",
+        "first_audio": 36.117
+      },
+      {
+        "text": "I just remembered I have a work meeting that I had forgotten about, can you cancel my appointment for Monday at 2 pm?",
+        "kind": "turn",
+        "start": 45.891,
+        "end": 52.052,
+        "heard_as": "I just remembered I have a work meeting that I had forgotten about. Can you cancel my appointment for Monday at 2 p.m.?",
+        "first_audio": 57.589
+      },
+      {
+        "text": "I'll talk to you later.",
+        "kind": "turn",
+        "start": 61.971,
+        "end": 63.132,
+        "heard_as": "I'll talk to you later.",
+        "first_audio": 67.69
+      }
+    ],
+    "agent_turns": [
+      {
+        "index": 0,
+        "start": 0.462,
+        "end": 3.422,
+        "text": [
+          "Thanks for calling Maple Dental, how can I help you today?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 1,
+        "start": 14.595,
+        "end": 26.277,
+        "text": [
+          "Let me check.",
+          "I've checked our schedule for Monday and it looks like 2 pm is available.",
+          "Would you like to book an appointment for Monday at 2 pm, Owen?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 2,
+        "start": 36.117,
+        "end": 43.508,
+        "text": [
+          "One moment, booking that now.",
+          "Your appointment for Monday at 2 pm is now booked, Owen."
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 3,
+        "start": 57.589,
+        "end": 61.089,
+        "text": [
+          "Your appointment for Monday at 2 pm has been cancelled, Owen."
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 4,
+        "start": 67.69,
+        "end": 68.83,
+        "text": [
+          "Goodbye, Owen."
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      }
+    ],
+    "tool_calls": [
+      {
+        "t": 17.404,
+        "name": "check_availability",
+        "arguments": {
+          "day": "monday"
+        },
+        "result": {
+          "day": "monday",
+          "available": [
+            "09:00",
+            "10:00",
+            "11:00",
+            "12:00",
+            "13:00",
+            "14:00",
+            "15:00",
+            "16:00"
+          ]
+        },
+        "ms": 143.72020799783058,
+        "attempts": 1
+      },
+      {
+        "t": 39.845,
+        "name": "book_appointment",
+        "arguments": {
+          "time": "14:00",
+          "name": "Owen Grant",
+          "day": "monday"
+        },
+        "result": {
+          "id": "515b8b63",
+          "name": "Owen Grant",
+          "day": "monday",
+          "time": "14:00",
+          "status": "confirmed"
+        },
+        "ms": 43.47825000877492,
+        "attempts": 1
+      },
+      {
+        "t": 57.431,
+        "name": "cancel_appointment",
+        "arguments": {},
+        "result": {
+          "id": "515b8b63",
+          "name": "Owen Grant",
+          "day": "monday",
+          "time": "14:00",
+          "status": "cancelled"
+        },
+        "ms": 15.902790997643024,
+        "attempts": 1
+      }
+    ],
+    "errors": []
+  },
+  "bookings": [
+    {
+      "id": "515b8b63",
+      "name": "Owen Grant",
+      "day": "monday",
+      "time": "14:00",
+      "status": "cancelled"
+    }
+  ]
+}

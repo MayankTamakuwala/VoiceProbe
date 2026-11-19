@@ -1,7 +1,10 @@
+import fcntl
 import json
 import logging
+import tempfile
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
 from pathlib import Path
 
 import httpx
@@ -34,6 +37,30 @@ class Bookings:
 
     async def close(self) -> None:
         await self.client.aclose()
+
+
+LOCK_PATH = Path(tempfile.gettempdir()) / "voiceprobe.lock"
+
+
+class Busy(Exception):
+    pass
+
+
+@contextmanager
+def one_at_a_time(path: Path = LOCK_PATH) -> Iterator[None]:
+    # two runs at once reset each other's bookings and share the same ollama,
+    # so both results end up wrong. the os drops the lock if we crash
+    f = open(path, "w")
+    try:
+        fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        f.close()
+        raise Busy("another voiceprobe run or load test is going, wait for it to finish") from None
+    try:
+        yield
+    finally:
+        fcntl.flock(f, fcntl.LOCK_UN)
+        f.close()
 
 
 def run_dir(root: str | Path = "out/runs", label: str = "") -> Path:

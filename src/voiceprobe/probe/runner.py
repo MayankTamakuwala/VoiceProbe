@@ -153,7 +153,11 @@ class CallRunner:
             turn = CallerTurn(line)
             self.record.caller_turns.append(turn)
             await self._say(turn)
-            if not await self._wait_ready(self.reply_timeout):
+            replied = await self._wait_ready(self.reply_timeout)
+            if self.caller.done:
+                # nothing back after a goodbye is fine, a person would just hang up
+                return "caller"
+            if not replied:
                 return "no_reply"
 
     def _ready(self) -> bool:

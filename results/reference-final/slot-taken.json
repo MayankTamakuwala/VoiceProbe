@@ -1,0 +1,169 @@
+{
+  "record": {
+    "scenario": "slot-taken",
+    "call_id": "slot-taken-bec979",
+    "agent": "reference",
+    "started_at": 1795066597.572435,
+    "duration": 50.325,
+    "ended_by": "caller",
+    "caller_turns": [
+      {
+        "text": "I'm Dana Lopez, and I'm calling to schedule an appointment for Thursday.",
+        "kind": "turn",
+        "start": 5.585,
+        "end": 9.247,
+        "heard_as": "I'm Dana Lopez, and I'm calling to schedule an appointment for Thursday.",
+        "first_audio": 11.368
+      },
+      {
+        "text": "I was thinking 11 am would be good.",
+        "kind": "turn",
+        "start": 24.326,
+        "end": 26.266,
+        "heard_as": "I was thinking 11am would be good.",
+        "first_audio": 29.856
+      },
+      {
+        "text": "10 am is fine.",
+        "kind": "turn",
+        "start": 37.485,
+        "end": 38.55,
+        "heard_as": "10am is fine.",
+        "first_audio": 42.991
+      }
+    ],
+    "agent_turns": [
+      {
+        "index": 0,
+        "start": 0.111,
+        "end": 3.111,
+        "text": [
+          "Thanks for calling Maple Dental, how can I help you today?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 1,
+        "start": 11.368,
+        "end": 23.187,
+        "text": [
+          "Let me check.",
+          "We have availability on Thursday.",
+          "What time would you like to book, 9 am, 10 am, 12 pm, 1 pm, 2 pm, 3 pm, or 4 pm?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 2,
+        "start": 29.856,
+        "end": 36.725,
+        "text": [
+          "Let me check.",
+          "I'm sorry, it seems 11 am is not available.",
+          "Would you like to book 10 am instead?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 3,
+        "start": 42.991,
+        "end": 49.839,
+        "text": [
+          "One moment, booking that now.",
+          "Your appointment is booked for Thursday at 10 am, Dana."
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      }
+    ],
+    "tool_calls": [
+      {
+        "t": 13.005,
+        "name": "check_availability",
+        "arguments": {
+          "day": "Thursday"
+        },
+        "result": {
+          "day": "thursday",
+          "available": [
+            "09:00",
+            "10:00",
+            "12:00",
+            "13:00",
+            "14:00",
+            "15:00",
+            "16:00"
+          ]
+        },
+        "ms": 11.107750004157424,
+        "attempts": 1,
+        "blocked": false
+      },
+      {
+        "t": 31.638,
+        "name": "check_availability",
+        "arguments": {
+          "day": "Thursday"
+        },
+        "result": {
+          "day": "thursday",
+          "available": [
+            "09:00",
+            "10:00",
+            "12:00",
+            "13:00",
+            "14:00",
+            "15:00",
+            "16:00"
+          ]
+        },
+        "ms": 15.334291994804516,
+        "attempts": 1,
+        "blocked": false
+      },
+      {
+        "t": 46.219,
+        "name": "book_appointment",
+        "arguments": {
+          "day": "Thursday",
+          "time": "10:00",
+          "name": "Dana Lopez"
+        },
+        "result": {
+          "id": "5d6ef3b5",
+          "name": "Dana Lopez",
+          "day": "thursday",
+          "time": "10:00",
+          "status": "confirmed"
+        },
+        "ms": 16.674790997058153,
+        "attempts": 1,
+        "blocked": false
+      }
+    ],
+    "errors": []
+  },
+  "bookings": [
+    {
+      "id": "98ea3775",
+      "name": "Alex Kim",
+      "day": "thursday",
+      "time": "11:00",
+      "status": "confirmed"
+    },
+    {
+      "id": "5d6ef3b5",
+      "name": "Dana Lopez",
+      "day": "thursday",
+      "time": "10:00",
+      "status": "confirmed"
+    }
+  ]
+}

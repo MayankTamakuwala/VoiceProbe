@@ -1,0 +1,160 @@
+{
+  "record": {
+    "scenario": "book-simple",
+    "call_id": "book-simple-917fd7",
+    "agent": "reference",
+    "started_at": 1795066138.289472,
+    "duration": 56.589,
+    "ended_by": "caller",
+    "caller_turns": [
+      {
+        "text": "Hi, I'm Priya Shah. I'd like to book a dental cleaning for Tuesday at 3pm, please.",
+        "kind": "turn",
+        "start": 6.304,
+        "end": 11.324,
+        "heard_as": "Hi, I'm Priya Shah. I'd like to book a dental cleaning for Tuesday at 3 p.m. Please.",
+        "first_audio": 13.522
+      },
+      {
+        "text": "Yes, that time works for me.",
+        "kind": "turn",
+        "start": 24.684,
+        "end": 26.385,
+        "heard_as": "Yes, that time works for me.",
+        "first_audio": 30.773
+      },
+      {
+        "text": "Thanks, I appreciate it.",
+        "kind": "turn",
+        "start": 40.684,
+        "end": 41.945,
+        "heard_as": "Thanks, I appreciate it.",
+        "first_audio": 45.213
+      },
+      {
+        "text": "Goodbye.",
+        "kind": "turn",
+        "start": 49.043,
+        "end": 49.565,
+        "heard_as": "Goodbye!",
+        "first_audio": 52.948
+      }
+    ],
+    "agent_turns": [
+      {
+        "index": 0,
+        "start": 0.107,
+        "end": 3.287,
+        "text": [
+          "Thanks for calling Maple Dental, how can I help you today?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 1,
+        "start": 13.522,
+        "end": 23.675,
+        "text": [
+          "Let me check.",
+          "I've checked our schedule, Priya.",
+          "We have availability at 3 pm on Tuesday.",
+          "Would you like to book the appointment for 3 pm on Tuesday?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 2,
+        "start": 30.773,
+        "end": 39.807,
+        "text": [
+          "One moment, booking that now.",
+          "Your appointment for a dental cleaning is booked for Tuesday at 3 pm, Priya.",
+          "We'll see you then."
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 3,
+        "start": 45.213,
+        "end": 48.493,
+        "text": [
+          "No action is needed, so no function call is required."
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 4,
+        "start": 52.948,
+        "end": 56.488,
+        "text": [
+          "No action is needed, so no function call is required."
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      }
+    ],
+    "tool_calls": [
+      {
+        "t": 15.451,
+        "name": "check_availability",
+        "arguments": {
+          "day": "Tuesday"
+        },
+        "result": {
+          "day": "tuesday",
+          "available": [
+            "09:00",
+            "10:00",
+            "11:00",
+            "12:00",
+            "13:00",
+            "14:00",
+            "15:00",
+            "16:00"
+          ]
+        },
+        "ms": 21.41874999506399,
+        "attempts": 1,
+        "blocked": false
+      },
+      {
+        "t": 34.103,
+        "name": "book_appointment",
+        "arguments": {
+          "day": "Tuesday",
+          "time": "15:00",
+          "name": "Priya Shah"
+        },
+        "result": {
+          "id": "2d4af7a8",
+          "name": "Priya Shah",
+          "day": "tuesday",
+          "time": "15:00",
+          "status": "confirmed"
+        },
+        "ms": 36.38124999997672,
+        "attempts": 1,
+        "blocked": false
+      }
+    ],
+    "errors": []
+  },
+  "bookings": [
+    {
+      "id": "2d4af7a8",
+      "name": "Priya Shah",
+      "day": "tuesday",
+      "time": "15:00",
+      "status": "confirmed"
+    }
+  ]
+}

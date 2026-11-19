@@ -1,0 +1,261 @@
+{
+  "run": "reference-first-run",
+  "barge_ms": 500,
+  "summary": {
+    "calls": 7,
+    "ended_by": {
+      "caller": 6,
+      "no_reply": 1
+    },
+    "ttfa_ms": {
+      "p50": 4098.0,
+      "p95": 6201.2,
+      "turns": 37
+    },
+    "barge_in": {
+      "handled": 2,
+      "total": 2,
+      "missed": 0,
+      "stop_p50_ms": 151.0
+    },
+    "task_success": {
+      "passed": 4,
+      "scored": 7
+    },
+    "tools": {
+      "passed": 5,
+      "total": 7,
+      "failed_calls": 2,
+      "blocked": 0
+    },
+    "wer": {
+      "rate": 0.0239,
+      "words": 376,
+      "unheard_turns": 0
+    }
+  },
+  "calls": [
+    {
+      "scenario": "book-simple",
+      "call_id": "book-simple-8f3d1f",
+      "agent": "reference",
+      "ended_by": "caller",
+      "duration": 69.339,
+      "turns": 4,
+      "ttfa_ms": [
+        6110.0,
+        5114.0,
+        6691.0,
+        6026.0
+      ],
+      "ttfa_p50_ms": 6068.0,
+      "barge_ins": [],
+      "barge_missed": 0,
+      "task": true,
+      "task_notes": [],
+      "tools_ok": true,
+      "tool_notes": [],
+      "tool_errors": 0,
+      "blocked_tools": [],
+      "wer_errors": 0,
+      "wer_words": 37,
+      "unheard": 0,
+      "errors": []
+    },
+    {
+      "scenario": "cancel",
+      "call_id": "cancel-f46193",
+      "agent": "reference",
+      "ended_by": "caller",
+      "duration": 69.227,
+      "turns": 4,
+      "ttfa_ms": [
+        3244.0,
+        6566.0,
+        5537.0,
+        4558.0
+      ],
+      "ttfa_p50_ms": 5047.5,
+      "barge_ins": [],
+      "barge_missed": 0,
+      "task": true,
+      "task_notes": [],
+      "tools_ok": true,
+      "tool_notes": [],
+      "tool_errors": 0,
+      "blocked_tools": [],
+      "wer_errors": 0,
+      "wer_words": 49,
+      "unheard": 0,
+      "errors": []
+    },
+    {
+      "scenario": "change-mind",
+      "call_id": "change-mind-16d7d4",
+      "agent": "reference",
+      "ended_by": "caller",
+      "duration": 80.632,
+      "turns": 5,
+      "ttfa_ms": [
+        2374.0,
+        3931.0,
+        4044.0,
+        4869.0,
+        4353.0
+      ],
+      "ttfa_p50_ms": 4044.0,
+      "barge_ins": [],
+      "barge_missed": 0,
+      "task": true,
+      "task_notes": [],
+      "tools_ok": false,
+      "tool_notes": [
+        "never called reschedule_appointment"
+      ],
+      "tool_errors": 0,
+      "blocked_tools": [],
+      "wer_errors": 0,
+      "wer_words": 58,
+      "unheard": 0,
+      "errors": []
+    },
+    {
+      "scenario": "interrupt-correction",
+      "call_id": "interrupt-correction-877795",
+      "agent": "reference",
+      "ended_by": "no_reply",
+      "duration": 36.83,
+      "turns": 2,
+      "ttfa_ms": [
+        3074.0,
+        4062.0
+      ],
+      "ttfa_p50_ms": 3568.0,
+      "barge_ins": [
+        {
+          "turn": 1,
+          "stopped_ms": 181,
+          "flagged": true,
+          "handled": true
+        }
+      ],
+      "barge_missed": 0,
+      "task": false,
+      "task_notes": [
+        "nothing booked"
+      ],
+      "tools_ok": false,
+      "tool_notes": [
+        "never called book_appointment"
+      ],
+      "tool_errors": 0,
+      "blocked_tools": [],
+      "wer_errors": 1,
+      "wer_words": 23,
+      "unheard": 0,
+      "errors": []
+    },
+    {
+      "scenario": "interrupt-greeting",
+      "call_id": "interrupt-greeting-7d256d",
+      "agent": "reference",
+      "ended_by": "caller",
+      "duration": 130.593,
+      "turns": 9,
+      "ttfa_ms": [
+        3808.0,
+        4991.0,
+        4319.0,
+        5255.0,
+        3765.0,
+        3868.0,
+        3922.0,
+        4603.0,
+        4472.0
+      ],
+      "ttfa_p50_ms": 4319.0,
+      "barge_ins": [
+        {
+          "turn": 0,
+          "stopped_ms": 121,
+          "flagged": true,
+          "handled": true
+        }
+      ],
+      "barge_missed": 0,
+      "task": false,
+      "task_notes": [
+        "wrong name: caller"
+      ],
+      "tools_ok": true,
+      "tool_notes": [],
+      "tool_errors": 1,
+      "blocked_tools": [],
+      "wer_errors": 3,
+      "wer_words": 90,
+      "unheard": 0,
+      "errors": []
+    },
+    {
+      "scenario": "off-topic",
+      "call_id": "off-topic-552b89",
+      "agent": "reference",
+      "ended_by": "caller",
+      "duration": 99.701,
+      "turns": 7,
+      "ttfa_ms": [
+        1671.0,
+        4098.0,
+        3683.0,
+        3760.0,
+        4890.0,
+        4366.0,
+        3355.0
+      ],
+      "ttfa_p50_ms": 3760.0,
+      "barge_ins": [],
+      "barge_missed": 0,
+      "task": false,
+      "task_notes": [
+        "wrong name: Ruth Akafer"
+      ],
+      "tools_ok": true,
+      "tool_notes": [],
+      "tool_errors": 0,
+      "blocked_tools": [],
+      "wer_errors": 5,
+      "wer_words": 76,
+      "unheard": 0,
+      "errors": []
+    },
+    {
+      "scenario": "slot-taken",
+      "call_id": "slot-taken-a836ce",
+      "agent": "reference",
+      "ended_by": "caller",
+      "duration": 87.152,
+      "turns": 6,
+      "ttfa_ms": [
+        2163.0,
+        4619.0,
+        3739.0,
+        3832.0,
+        4339.0,
+        3543.0
+      ],
+      "ttfa_p50_ms": 3785.5,
+      "barge_ins": [],
+      "barge_missed": 0,
+      "task": true,
+      "task_notes": [],
+      "tools_ok": true,
+      "tool_notes": [],
+      "tool_errors": 1,
+      "blocked_tools": [],
+      "wer_errors": 0,
+      "wer_words": 43,
+      "unheard": 0,
+      "errors": []
+    }
+  ]
+}

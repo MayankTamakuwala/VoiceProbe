@@ -1,0 +1,147 @@
+{
+  "record": {
+    "scenario": "cancel",
+    "call_id": "cancel-58fb83",
+    "agent": "elevenlabs",
+    "started_at": 1795068128.873056,
+    "duration": 53.07,
+    "ended_by": "caller",
+    "caller_turns": [
+      {
+        "text": "Hi, I'd like to book an appointment for Monday at 2pm.",
+        "kind": "turn",
+        "start": 6.773,
+        "end": 10.155,
+        "heard_as": "Hi, I'd like to book an appointment for Monday at 2:00 PM.",
+        "first_audio": 11.749
+      },
+      {
+        "text": "Owen Grant.",
+        "kind": "turn",
+        "start": 17.213,
+        "end": 17.817,
+        "heard_as": "Owen Grant.",
+        "first_audio": 19.566
+      },
+      {
+        "text": "Yes, that's correct.",
+        "kind": "turn",
+        "start": 26.213,
+        "end": 27.534,
+        "heard_as": "Yes, that's correct.",
+        "first_audio": 29.633
+      },
+      {
+        "text": "Thanks, I just remembered something - I have a work meeting scheduled for that time, can I cancel my appointment?",
+        "kind": "turn",
+        "start": 37.513,
+        "end": 43.255,
+        "heard_as": "Thanks. I just remembered something. I have a work meeting scheduled for that time. Can I cancel my appointment?",
+        "first_audio": 45.373
+      }
+    ],
+    "agent_turns": [
+      {
+        "index": 0,
+        "start": 0.582,
+        "end": 3.622,
+        "text": [
+          "Thanks for calling Maple Dental, how can I help you today?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 1,
+        "start": 11.749,
+        "end": 15.109,
+        "text": [
+          "Okay, and what name should I put the appointment under?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 2,
+        "start": 19.566,
+        "end": 24.046,
+        "text": [
+          "So that's Owen Grant for Monday at 2 PM. Does that sound right?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 3,
+        "start": 29.633,
+        "end": 34.193,
+        "text": [
+          "Great! Your appointment for Owen Grant on Monday at 2 PM is all set."
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 4,
+        "start": 45.373,
+        "end": 51.053,
+        "text": [
+          "Oh, I'm sorry to hear that. Your appointment for Monday at 2 PM has been cancelled."
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      }
+    ],
+    "tool_calls": [
+      {
+        "t": 28.938,
+        "name": "book_appointment",
+        "arguments": {
+          "name": "Owen Grant",
+          "day": "Monday",
+          "time": "14:00"
+        },
+        "result": {
+          "id": "a453dc67",
+          "name": "Owen Grant",
+          "day": "monday",
+          "time": "14:00",
+          "status": "confirmed"
+        },
+        "ms": 24.62195898988284,
+        "attempts": 1,
+        "blocked": false
+      },
+      {
+        "t": 44.378,
+        "name": "cancel_appointment",
+        "arguments": {},
+        "result": {
+          "id": "a453dc67",
+          "name": "Owen Grant",
+          "day": "monday",
+          "time": "14:00",
+          "status": "cancelled"
+        },
+        "ms": 22.653833002550527,
+        "attempts": 1,
+        "blocked": false
+      }
+    ],
+    "errors": []
+  },
+  "bookings": [
+    {
+      "id": "a453dc67",
+      "name": "Owen Grant",
+      "day": "monday",
+      "time": "14:00",
+      "status": "cancelled"
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "record": {
+    "scenario": "load-6",
+    "call_id": "load-6x-2",
+    "agent": "reference",
+    "started_at": 1795066025.472308,
+    "duration": 41.734,
+    "ended_by": "caller",
+    "caller_turns": [
+      {
+        "text": "Hi, what times do you have free on Wednesday?",
+        "kind": "turn",
+        "start": 3.085,
+        "end": 6.046,
+        "heard_as": "Hi. What times do you have free on Wednesday?",
+        "first_audio": 10.498
+      },
+      {
+        "text": "Okay. Do you do teeth whitening there too?",
+        "kind": "turn",
+        "start": 16.465,
+        "end": 18.885,
+        "heard_as": "Okay, do you do teeth whitening there too?",
+        "first_audio": 28.075
+      },
+      {
+        "text": "Alright, thanks, bye.",
+        "kind": "turn",
+        "start": 34.546,
+        "end": 36.266,
+        "heard_as": "Alright, thanks, bye.",
+        "first_audio": 39.836
+      }
+    ],
+    "agent_turns": [
+      {
+        "index": 0,
+        "start": 0.13,
+        "end": 3.03,
+        "text": [
+          "Thanks for calling Maple Dental, how can I help you today?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 1,
+        "start": 10.498,
+        "end": 11.438,
+        "text": [
+          "Let me check."
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 2,
+        "start": 28.075,
+        "end": 34.475,
+        "text": [
+          "We do offer teeth whitening services, would you like to book an appointment or would you like more information about the procedure?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 3,
+        "start": 39.836,
+        "end": 41.696,
+        "text": [
+          "No action needed, goodbye."
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      }
+    ],
+    "tool_calls": [
+      {
+        "t": 27.834,
+        "name": "check_availability",
+        "arguments": {
+          "day": "Wednesday"
+        },
+        "result": {
+          "day": "wednesday",
+          "available": [
+            "09:00",
+            "10:00",
+            "11:00",
+            "12:00",
+            "13:00",
+            "14:00",
+            "15:00",
+            "16:00"
+          ]
+        },
+        "ms": 5.376084001909476,
+        "attempts": 1,
+        "blocked": false
+      }
+    ],
+    "errors": []
+  },
+  "bookings": null
+}

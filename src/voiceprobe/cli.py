@@ -105,7 +105,7 @@ def cmd_run(args):
     from voiceprobe.probe.adapters import ElevenLabsAdapter, ReferenceAdapter
     from voiceprobe.probe.report import format_report, score_run
     from voiceprobe.probe.scenario import load_all
-    from voiceprobe.probe.suite import Bookings, run_dir, run_suite
+    from voiceprobe.probe.suite import Bookings, Busy, one_at_a_time, run_dir, run_suite
 
     scenarios = load_all(args.scenarios)
     if args.only:
@@ -146,7 +146,11 @@ def cmd_run(args):
         print(format_report(score_run(out, scenarios, args.barge_ms)))
         print(f"\nsaved to {out}")
 
-    asyncio.run(run())
+    try:
+        with one_at_a_time():
+            asyncio.run(run())
+    except Busy as e:
+        raise SystemExit(str(e)) from None
 
 
 def cmd_score(args):
@@ -170,20 +174,24 @@ def cmd_load(args):
     from voiceprobe.audio.tts import Tts
     from voiceprobe.probe.adapters import ReferenceAdapter
     from voiceprobe.probe.load import format_load, ramp
-    from voiceprobe.probe.suite import run_dir
+    from voiceprobe.probe.suite import Busy, one_at_a_time, run_dir
 
-    out = run_dir(args.out, "load")
-    report = asyncio.run(
-        ramp(
-            args.levels,
-            lambda: ReferenceAdapter(args.url),
-            Tts(),
-            out=out,
-            max_p95_ms=args.max_p95_ms,
-            stagger=args.stagger,
-            keep_going=args.keep_going,
-        )
-    )
+    try:
+        with one_at_a_time():
+            out = run_dir(args.out, "load")
+            report = asyncio.run(
+                ramp(
+                    args.levels,
+                    lambda: ReferenceAdapter(args.url),
+                    Tts(),
+                    out=out,
+                    max_p95_ms=args.max_p95_ms,
+                    stagger=args.stagger,
+                    keep_going=args.keep_going,
+                )
+            )
+    except Busy as e:
+        raise SystemExit(str(e)) from None
     print(format_load(report))
     print(f"\nsaved to {out}")
 

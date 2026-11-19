@@ -1,0 +1,71 @@
+# booking api + reference agent. ollama runs on the host by default since
+# docker on a mac can't use the gpu, see the readme for running it in here too.
+# COMPOSE_OLLAMA_HOST rather than OLLAMA_HOST, compose reads .env and that one
+# points at localhost for running things outside docker.
+
+x-app: &app
+  build: .
+  image: voiceprobe
+  extra_hosts:
+    - host.docker.internal:host-gateway
+  environment:
+    BOOKING_URL: http://booking:8001
+    OLLAMA_HOST: ${COMPOSE_OLLAMA_HOST:-http://host.docker.internal:11434}
+    OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.1:8b}
+
+services:
+  booking:
+    <<: *app
+    command: voiceprobe booking --host 0.0.0.0 --port 8001 --db /app/data/bookings.db
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  agent:
+    <<: *app
+    command: voiceprobe agent --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models
+    depends_on:
+      booking:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      # loading whisper and warming up the llm takes a bit
+      start_period: 120s
+
+  # docker compose --profile probe run --rm probe
+  probe:
+    <<: *app
+    profiles: ["probe"]
+    command: voiceprobe run --url ws://agent:8000/call --booking-url http://booking:8001
+    volumes:
+      - ./models:/app/models
+      - ./scenarios:/app/scenarios
+      - ./out:/app/out
+    depends_on:
+      agent:
+        condition: service_healthy
+
+  # COMPOSE_OLLAMA_HOST=http://ollama:11434 docker compose --profile ollama up
+  ollama:
+    image: ollama/ollama:0.40.16
+    profiles: ["ollama"]
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+
+volumes:
+  ollama:

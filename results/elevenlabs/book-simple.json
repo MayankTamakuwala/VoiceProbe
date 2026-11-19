@@ -1,0 +1,193 @@
+{
+  "record": {
+    "scenario": "book-simple",
+    "call_id": "book-simple-0867c0",
+    "agent": "elevenlabs",
+    "started_at": 1795068066.269234,
+    "duration": 62.59,
+    "ended_by": "caller",
+    "caller_turns": [
+      {
+        "text": "I'd like to book a dental cleaning.",
+        "kind": "turn",
+        "start": 5.994,
+        "end": 7.616,
+        "heard_as": "I'd like to book a dental cleaning.",
+        "first_audio": 8.71
+      },
+      {
+        "text": "Tuesday would be good.",
+        "kind": "turn",
+        "start": 15.055,
+        "end": 16.175,
+        "heard_as": "Tuesday would be good.",
+        "first_audio": 17.795
+      },
+      {
+        "text": "Three o'clock would be great, thank you.",
+        "kind": "turn",
+        "start": 26.155,
+        "end": 28.178,
+        "heard_as": "Three o'clock would be great. Thank you.",
+        "first_audio": 29.185
+      },
+      {
+        "text": "Priya Shah.",
+        "kind": "turn",
+        "start": 33.695,
+        "end": 34.336,
+        "heard_as": "Priya Shah.",
+        "first_audio": 35.344
+      },
+      {
+        "text": "Yes, that's correct.",
+        "kind": "turn",
+        "start": 43.975,
+        "end": 45.117,
+        "heard_as": "Yes, that's correct.",
+        "first_audio": 46.911
+      },
+      {
+        "text": "Thanks, I appreciate it.",
+        "kind": "turn",
+        "start": 55.035,
+        "end": 56.336,
+        "heard_as": "Thanks, I appreciate it.",
+        "first_audio": 57.305
+      }
+    ],
+    "agent_turns": [
+      {
+        "index": 0,
+        "start": 0.622,
+        "end": 3.582,
+        "text": [
+          "Thanks for calling Maple Dental, how can I help you today?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 1,
+        "start": 8.71,
+        "end": 12.87,
+        "text": [
+          "I can certainly help you with that. What day of the week works best for you?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 2,
+        "start": 17.795,
+        "end": 23.715,
+        "text": [
+          "We have openings on Tuesday every hour from nine am to four pm. What time would you prefer?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 3,
+        "start": 29.185,
+        "end": 31.665,
+        "text": [
+          "And may I please have your name for the booking?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 4,
+        "start": 35.344,
+        "end": 41.664,
+        "text": [
+          "Thank you, Priya. So, I have you down for a dental cleaning on Tuesday at three pm. Is that correct?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 5,
+        "start": 46.911,
+        "end": 52.671,
+        "text": [
+          "Perfect, your appointment is all booked for Tuesday at three pm. We look forward to seeing you then!"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 6,
+        "start": 57.305,
+        "end": 60.985,
+        "text": [
+          "You are very welcome, Priya. Have a wonderful day!"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      }
+    ],
+    "tool_calls": [
+      {
+        "t": 17.047,
+        "name": "check_availability",
+        "arguments": {
+          "day": "Tuesday"
+        },
+        "result": {
+          "day": "tuesday",
+          "available": [
+            "09:00",
+            "10:00",
+            "11:00",
+            "12:00",
+            "13:00",
+            "14:00",
+            "15:00",
+            "16:00"
+          ]
+        },
+        "ms": 18.647999997483566,
+        "attempts": 1,
+        "blocked": false
+      },
+      {
+        "t": 46.227,
+        "name": "book_appointment",
+        "arguments": {
+          "name": "Priya Shah",
+          "day": "Tuesday",
+          "time": "15:00"
+        },
+        "result": {
+          "id": "df99e589",
+          "name": "Priya Shah",
+          "day": "tuesday",
+          "time": "15:00",
+          "status": "confirmed"
+        },
+        "ms": 27.49291600775905,
+        "attempts": 1,
+        "blocked": false
+      }
+    ],
+    "errors": []
+  },
+  "bookings": [
+    {
+      "id": "df99e589",
+      "name": "Priya Shah",
+      "day": "tuesday",
+      "time": "15:00",
+      "status": "confirmed"
+    }
+  ]
+}

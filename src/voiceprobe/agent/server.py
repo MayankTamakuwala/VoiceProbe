@@ -189,8 +189,11 @@ def create_app(models: Models | None = None) -> FastAPI:
     async def lifespan(app: FastAPI):
         app.state.models = models or Models()
         app.state.calls = OrderedDict()
-        with suppress(httpx.HTTPError):
+        try:
             await app.state.models.llm.warmup()
+        except httpx.HTTPError as e:
+            # still start, but make it obvious why every call is going to fail
+            log.warning("couldn't reach ollama at %s: %r", app.state.models.llm.host, e)
         log.info("agent ready")
         yield
         await app.state.models.booking.aclose()

@@ -1,0 +1,61 @@
+{
+  "levels": [
+    {
+      "calls": 1,
+      "peak": 1,
+      "turns": 3,
+      "p50_ms": 3699.0,
+      "p95_ms": 4841.1,
+      "max_ms": 4968.0,
+      "failed": []
+    },
+    {
+      "calls": 2,
+      "peak": 2,
+      "turns": 6,
+      "p50_ms": 3171.5,
+      "p95_ms": 4204.5,
+      "max_ms": 4385.0,
+      "failed": []
+    },
+    {
+      "calls": 3,
+      "peak": 3,
+      "turns": 9,
+      "p50_ms": 3559.0,
+      "p95_ms": 5497.0,
+      "max_ms": 6023.0,
+      "failed": []
+    },
+    {
+      "calls": 4,
+      "peak": 4,
+      "turns": 12,
+      "p50_ms": 3343.0,
+      "p95_ms": 5484.6,
+      "max_ms": 5588.0,
+      "failed": []
+    },
+    {
+      "calls": 6,
+      "peak": 6,
+      "turns": 18,
+      "p50_ms": 5622.5,
+      "p95_ms": 9662.8,
+      "max_ms": 9962.0,
+      "failed": []
+    },
+    {
+      "calls": 8,
+      "peak": 8,
+      "turns": 24,
+      "p50_ms": 9491.0,
+      "p95_ms": 11856.7,
+      "max_ms": 12506.0,
+      "failed": []
+    }
+  ],
+  "p95_limit_ms": 9682.2,
+  "breaks_at": 8,
+  "holds_up_to": 6
+}

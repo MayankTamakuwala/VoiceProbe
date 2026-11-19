@@ -1,0 +1,243 @@
+{
+  "record": {
+    "scenario": "interrupt-correction",
+    "call_id": "interrupt-correction-cd85af",
+    "agent": "reference",
+    "started_at": 1795066323.6269062,
+    "duration": 74.433,
+    "ended_by": "caller",
+    "caller_turns": [
+      {
+        "text": "Hi, my name is Lena Park. What times are available on Monday morning?",
+        "kind": "turn",
+        "start": 5.725,
+        "end": 9.686,
+        "heard_as": "Hi, my name is Lena Park. What times are available on Monday morning?",
+        "first_audio": 11.914
+      },
+      {
+        "text": "Sorry, sorry, I meant Friday, not Monday.",
+        "kind": "interrupt",
+        "start": 13.914,
+        "end": 16.507,
+        "heard_as": "Sorry, sorry, I meant Friday, not Monday.",
+        "first_audio": 20.133
+      },
+      {
+        "text": "I'll take 10 am on Friday, please.",
+        "kind": "turn",
+        "start": 36.306,
+        "end": 38.447,
+        "heard_as": "I'll take 10am on Friday please.",
+        "first_audio": 43.269
+      },
+      {
+        "text": "Yes, that's correct.",
+        "kind": "turn",
+        "start": 50.706,
+        "end": 51.886,
+        "heard_as": "Yes, that's correct.",
+        "first_audio": 56.507
+      },
+      {
+        "text": "Good, thanks.",
+        "kind": "turn",
+        "start": 63.805,
+        "end": 64.686,
+        "heard_as": "Good thanks.",
+        "first_audio": 68.257
+      }
+    ],
+    "agent_turns": [
+      {
+        "index": 0,
+        "start": 0.124,
+        "end": 3.204,
+        "text": [
+          "Thanks for calling Maple Dental, how can I help you today?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 1,
+        "start": 11.914,
+        "end": 14.047,
+        "text": [
+          "Let me check.",
+          "Good morning, Lena."
+        ],
+        "interrupted_at": 13.914,
+        "stopped_ms": 133,
+        "flagged": true
+      },
+      {
+        "index": 2,
+        "start": 20.133,
+        "end": 34.539,
+        "text": [
+          "Let me check.",
+          "So on Friday, we have appointments available at 9 am, 10 am, 11 am, 12 pm, 1 pm, 2 pm, 3 pm, and 4 pm."
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 3,
+        "start": 43.269,
+        "end": 49.926,
+        "text": [
+          "One moment, booking that now.",
+          "Lena Park, Friday at 10 am, is that correct?"
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 4,
+        "start": 56.507,
+        "end": 62.967,
+        "text": [
+          "One moment, booking that now.",
+          "Your appointment is booked, thank you for calling Maple Dental."
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      },
+      {
+        "index": 5,
+        "start": 68.257,
+        "end": 74.39,
+        "text": [
+          "Let me check.",
+          "Now it says 10 am is booked, but we didn't make a second booking."
+        ],
+        "interrupted_at": null,
+        "stopped_ms": null,
+        "flagged": false
+      }
+    ],
+    "tool_calls": [
+      {
+        "t": 13.704,
+        "name": "check_availability",
+        "arguments": {
+          "day": "Monday"
+        },
+        "result": {
+          "day": "monday",
+          "available": [
+            "09:00",
+            "10:00",
+            "11:00",
+            "12:00",
+            "13:00",
+            "14:00",
+            "15:00",
+            "16:00"
+          ]
+        },
+        "ms": 25.46591700229328,
+        "attempts": 1,
+        "blocked": false
+      },
+      {
+        "t": 23.276,
+        "name": "check_availability",
+        "arguments": {
+          "day": "Friday"
+        },
+        "result": {
+          "day": "friday",
+          "available": [
+            "09:00",
+            "10:00",
+            "11:00",
+            "12:00",
+            "13:00",
+            "14:00",
+            "15:00",
+            "16:00"
+          ]
+        },
+        "ms": 22.825874999398366,
+        "attempts": 1,
+        "blocked": false
+      },
+      {
+        "t": 46.598,
+        "name": "book_appointment",
+        "arguments": {
+          "time": "10:00",
+          "name": "Lena Park",
+          "day": "Friday"
+        },
+        "result": {
+          "id": "16894f86",
+          "name": "Lena Park",
+          "day": "friday",
+          "time": "10:00",
+          "status": "confirmed"
+        },
+        "ms": 33.48641699994914,
+        "attempts": 1,
+        "blocked": false
+      },
+      {
+        "t": 59.599,
+        "name": "reschedule_appointment",
+        "arguments": {
+          "day": "Friday",
+          "time": "10:00"
+        },
+        "result": {
+          "id": "16894f86",
+          "name": "Lena Park",
+          "day": "friday",
+          "time": "10:00",
+          "status": "confirmed",
+          "note": "moved their existing booking, no second booking was made"
+        },
+        "ms": 27.257458001258783,
+        "attempts": 1,
+        "blocked": false
+      },
+      {
+        "t": 70.39,
+        "name": "check_availability",
+        "arguments": {
+          "day": "Friday"
+        },
+        "result": {
+          "day": "friday",
+          "available": [
+            "09:00",
+            "11:00",
+            "12:00",
+            "13:00",
+            "14:00",
+            "15:00",
+            "16:00"
+          ]
+        },
+        "ms": 15.290041003027,
+        "attempts": 1,
+        "blocked": false
+      }
+    ],
+    "errors": []
+  },
+  "bookings": [
+    {
+      "id": "16894f86",
+      "name": "Lena Park",
+      "day": "friday",
+      "time": "10:00",
+      "status": "confirmed"
+    }
+  ]
+}

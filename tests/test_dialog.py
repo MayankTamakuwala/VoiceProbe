@@ -125,7 +125,8 @@ async def test_no_booking_without_a_name(tools, app):
         ]
     )
     dialog = Dialog(llm, tools)
-    await collect(dialog.reply("Monday at 9am please"))
+    # no "booking that now" for a booking that isn't going to happen
+    assert await collect(dialog.reply("Monday at 9am please")) == ["Sure, can I get your name?"]
     assert app.state.store.bookings() == []
     assert "name" in llm.seen[1][-1]["content"]
     await collect(dialog.reply("It's Tom Reyes."))
