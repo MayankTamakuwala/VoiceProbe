@@ -147,9 +147,37 @@ def cmd_score(args):
     from voiceprobe.probe.report import format_report, score_run
     from voiceprobe.probe.scenario import load_all
 
-    run = Path(args.run) if args.run else max(Path(args.out).iterdir(), key=lambda p: p.name)
+    if args.run:
+        run = Path(args.run)
+    else:
+        runs = [p for p in Path(args.out).iterdir() if p.is_dir() and not p.name.endswith("-load")]
+        run = max(runs, key=lambda p: p.name)
     print(f"{run}\n")
     print(format_report(score_run(run, load_all(args.scenarios), args.barge_ms)))
+
+
+def cmd_load(args):
+    import asyncio
+
+    from voiceprobe.audio.tts import Tts
+    from voiceprobe.probe.adapters import ReferenceAdapter
+    from voiceprobe.probe.load import format_load, ramp
+    from voiceprobe.probe.suite import run_dir
+
+    out = run_dir(args.out, "load")
+    report = asyncio.run(
+        ramp(
+            args.levels,
+            lambda: ReferenceAdapter(args.url),
+            Tts(),
+            out=out,
+            max_p95_ms=args.max_p95_ms,
+            stagger=args.stagger,
+            keep_going=args.keep_going,
+        )
+    )
+    print(format_load(report))
+    print(f"\nsaved to {out}")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -203,6 +231,15 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--barge-ms", type=float, default=500, help="max ms for the agent to stop on barge-in")
     p.add_argument("-o", "--out", default="out/runs")
     p.set_defaults(func=cmd_run)
+
+    p = sub.add_parser("load", help="ramp up concurrent calls until p95 latency breaks")
+    p.add_argument("--levels", type=int, nargs="+", default=[1, 2, 3, 4, 6, 8])
+    p.add_argument("--url", default="ws://127.0.0.1:8000/call")
+    p.add_argument("--max-p95-ms", type=float, help="defaults to twice the single call p95")
+    p.add_argument("--stagger", type=float, default=0.5, help="seconds between call starts")
+    p.add_argument("--keep-going", action="store_true", help="run every level even after it breaks")
+    p.add_argument("-o", "--out", default="out/runs")
+    p.set_defaults(func=cmd_load)
 
     p = sub.add_parser("score", help="score a saved run (defaults to the latest)")
     p.add_argument("run", nargs="?")

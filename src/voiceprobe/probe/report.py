@@ -9,11 +9,8 @@ log = logging.getLogger(__name__)
 
 
 def load_results(run_dir: Path) -> list[dict]:
-    return [
-        json.loads(p.read_text())
-        for p in sorted(run_dir.glob("*.json"))
-        if p.name != "report.json"
-    ]
+    results = (json.loads(p.read_text()) for p in sorted(run_dir.glob("*.json")))
+    return [r for r in results if "record" in r]
 
 
 def score_run(run_dir: str | Path, scenarios: list[Scenario], barge_ms: float = BARGE_MS) -> dict:
