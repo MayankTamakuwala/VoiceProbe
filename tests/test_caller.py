@@ -1,6 +1,6 @@
 import pytest
 
-from voiceprobe.probe.caller import Caller, clean
+from voiceprobe.probe.caller import Caller, ScriptedCaller, clean
 from voiceprobe.probe.scenario import parse
 
 
@@ -81,3 +81,12 @@ async def test_goodbye_without_marker_ends():
     caller = Caller(scenario(), FakeLlm(["Great, thanks, bye!"]))
     await caller.next_line("You're booked.")
     assert caller.done
+
+
+async def test_scripted_caller():
+    caller = ScriptedCaller(["hi", "bye"])
+    assert await caller.next_line("hello") == "hi"
+    assert not caller.done
+    assert await caller.next_line("yes?") == "bye"
+    assert caller.done
+    assert await caller.next_line("") == ""

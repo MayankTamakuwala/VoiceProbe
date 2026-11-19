@@ -70,3 +70,23 @@ class Caller:
         if agent_partial.strip():
             self.messages.append({"role": "user", "content": agent_partial.strip() + "..."})
         self.messages.append({"role": "assistant", "content": said})
+
+
+class ScriptedCaller:
+    """Says fixed lines no matter what the agent says. Used for load, where an
+    llm caller would compete with the agent for the same ollama."""
+
+    def __init__(self, lines: list[str]):
+        self.lines = list(lines)
+        self.done = not self.lines
+
+    async def next_line(self, agent_said: str) -> str:
+        if not self.lines:
+            self.done = True
+            return ""
+        line = self.lines.pop(0)
+        self.done = not self.lines
+        return line
+
+    def interrupted(self, agent_partial: str, said: str) -> None:
+        pass
