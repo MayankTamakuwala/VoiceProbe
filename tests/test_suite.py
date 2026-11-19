@@ -45,7 +45,8 @@ async def test_suite_seeds_and_saves(start_agent, speech_models, tmp_path):
     results = await run_suite(
         [scenario],
         lambda: ReferenceAdapter(f"ws://{host}/call"),
-        Lines(["Thursday at 11 please, Dana Lopez.", "Noon is fine.", "Great, bye. [END]"]),
+        # name first, so it's heard even if the agent's vad splits the sentence
+        Lines(["Dana Lopez here, Thursday at 11 please.", "Noon is fine.", "Great, bye. [END]"]),
         tts,
         stt,
         bookings=bookings,

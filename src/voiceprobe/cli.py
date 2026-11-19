@@ -103,6 +103,7 @@ def cmd_run(args):
     from voiceprobe.audio.stt import Stt
     from voiceprobe.audio.tts import Tts
     from voiceprobe.probe.adapters import ReferenceAdapter
+    from voiceprobe.probe.report import format_report, score_run
     from voiceprobe.probe.scenario import load_all
     from voiceprobe.probe.suite import Bookings, run_dir, run_suite
 
@@ -134,16 +135,21 @@ def cmd_run(args):
             await llm.close()
             await bookings.close()
 
-        for r in results:
-            rec = r["record"]
-            tools = ", ".join(c["name"] for c in rec["tool_calls"]) or "-"
-            print(
-                f"{rec['scenario']:22} {rec['ended_by']:12} {rec['duration']:6.1f}s "
-                f"{len(rec['caller_turns']):2d} turns  tools: {tools}"
-            )
-        print(f"saved to {out}")
+        print(format_report(score_run(out, scenarios, args.barge_ms)))
+        print(f"\nsaved to {out}")
 
     asyncio.run(run())
+
+
+def cmd_score(args):
+    from pathlib import Path
+
+    from voiceprobe.probe.report import format_report, score_run
+    from voiceprobe.probe.scenario import load_all
+
+    run = Path(args.run) if args.run else max(Path(args.out).iterdir(), key=lambda p: p.name)
+    print(f"{run}\n")
+    print(format_report(score_run(run, load_all(args.scenarios), args.barge_ms)))
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -194,8 +200,16 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--temperature", type=float, default=0.7)
     p.add_argument("--seed", type=int)
     p.add_argument("--label", default="")
+    p.add_argument("--barge-ms", type=float, default=500, help="max ms for the agent to stop on barge-in")
     p.add_argument("-o", "--out", default="out/runs")
     p.set_defaults(func=cmd_run)
+
+    p = sub.add_parser("score", help="score a saved run (defaults to the latest)")
+    p.add_argument("run", nargs="?")
+    p.add_argument("--scenarios", nargs="+", default=["scenarios"])
+    p.add_argument("--barge-ms", type=float, default=500)
+    p.add_argument("-o", "--out", default="out/runs")
+    p.set_defaults(func=cmd_score)
 
     return parser
 

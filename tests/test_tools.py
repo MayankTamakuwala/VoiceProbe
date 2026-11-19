@@ -47,6 +47,24 @@ async def test_duplicate_tool_call_books_once(tools, app):
     assert len(app.state.store.bookings()) == 1
 
 
+async def test_second_booking_becomes_reschedule(tools, app):
+    await tools.run("book_appointment", {"name": "Marcus Bell", "day": "tuesday", "time": "15:00"})
+    r = await tools.run("book_appointment", {"name": "Marcus", "day": "wednesday", "time": "10:00"})
+    assert (r["day"], r["time"]) == ("wednesday", "10:00")
+    assert "no second booking" in r["note"]
+    assert [(b.day, b.status) for b in app.state.store.bookings()] == [("wednesday", "confirmed")]
+    assert [h.name for h in tools.history] == ["book_appointment", "reschedule_appointment"]
+
+
+async def test_new_booking_after_cancel_or_for_someone_else(tools, app):
+    await tools.run("book_appointment", {"name": "Owen Grant", "day": "monday", "time": "09:00"})
+    await tools.run("book_appointment", {"name": "Ada Lee", "day": "monday", "time": "10:00"})
+    await tools.run("cancel_appointment", {})
+    await tools.run("book_appointment", {"name": "Ada Lee", "day": "friday", "time": "10:00"})
+    assert len(app.state.store.bookings("confirmed")) == 2
+    assert [h.name for h in tools.history][-1] == "book_appointment"
+
+
 async def test_cancel_without_booking(tools):
     r = await tools.run("cancel_appointment", {})
     assert "no booking" in r["error"]

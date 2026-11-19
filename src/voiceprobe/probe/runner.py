@@ -135,11 +135,7 @@ class CallRunner:
         return self.record
 
     async def _converse(self) -> str:
-        ready = await self._wait_ready(self.greeting_timeout)
-        if not ready and self.record.agent_turns:
-            # greeting started but we barged in, give the agent time to answer that
-            ready = await self._wait_ready(self.reply_timeout)
-        if not ready:
+        if not await self._wait_ready(self.greeting_timeout):
             if self.record.agent_turns:
                 return "no_reply"
             # no greeting, caller goes first
@@ -170,11 +166,15 @@ class CallRunner:
 
     async def _wait_ready(self, timeout: float) -> bool:
         deadline = time.perf_counter() + timeout
-        while time.perf_counter() < deadline:
+        while True:
             await asyncio.sleep(0.05)
             if self.closed or self._ready():
                 return True
-        return False
+            if self.agent is not None or self.caller_speaking:
+                # someone is still talking, only give up once the line goes quiet
+                deadline = time.perf_counter() + self.reply_timeout
+            elif time.perf_counter() > deadline:
+                return False
 
     async def _hear(self) -> str:
         if self.hear == "audio" and self.stt and self.agent_audio:

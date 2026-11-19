@@ -63,6 +63,7 @@ class BookingTools:
     client: httpx.AsyncClient | None = None
     retries: int = 3
     booking_id: str | None = None
+    booking: dict | None = None
     history: list[ToolRecord] = field(default_factory=list)
 
     def __post_init__(self):
@@ -90,10 +91,24 @@ class BookingTools:
             await asyncio.sleep(0.1 * 2**attempt)
         return last_error, self.retries
 
+    def _rebooking(self, args: dict) -> bool:
+        if not self.booking or self.booking["status"] != "confirmed":
+            return False
+        name = str(args.get("name", "")).lower().split()
+        return not name or bool(set(name) & set(self.booking["name"].lower().split()))
+
     async def run(self, name: str, args: dict) -> dict:
+        moved = False
+        if name == "book_appointment" and self._rebooking(args):
+            # when the caller changes their mind the model tends to just book again
+            log.info("caller already has a booking, moving it instead")
+            name, moved = "reschedule_appointment", True
+            args = {k: args.get(k, "") for k in ("day", "time")}
         started = time.time()
         t0 = time.perf_counter()
         result, attempts = await self._dispatch(name, args)
+        if moved and "error" not in result:
+            result = {**result, "note": "moved their existing booking, no second booking was made"}
         self.history.append(
             ToolRecord(name, args, result, started, (time.perf_counter() - t0) * 1000, attempts)
         )
@@ -125,6 +140,8 @@ class BookingTools:
             return {"error": data.get("error") or data.get("detail") or r.text}, attempts
         if name == "book_appointment":
             self.booking_id = data["id"]
+        if name != "check_availability":
+            self.booking = data
         return data, attempts
 
     async def close(self) -> None:

@@ -4,7 +4,8 @@ name: Marcus Bell
 style: A bit scattered, changes plans easily.
 goal:
   - Book a checkup for Tuesday at 3pm.
-  - Right after it's booked, change your mind and ask to move it to Wednesday at 10am instead.
+  - Wait until the receptionist says the Tuesday booking is done. Only then change your mind
+    and ask to move it to Wednesday at 10am instead.
   - When the move is confirmed, say goodbye.
 expect:
   booking: {name: Marcus Bell, day: wednesday, time: "10:00"}

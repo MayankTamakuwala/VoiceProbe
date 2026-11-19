@@ -89,3 +89,30 @@ async def test_goodbye_does_not_cancel(tools, app):
     await collect(dialog.reply("Thanks, bye"))
     assert [b.status for b in app.state.store.bookings()] == ["confirmed"]
     assert "did not ask to cancel" in llm.seen[3][-1]["content"]
+
+
+async def test_no_booking_without_a_name(tools, app):
+    llm = ScriptedLlm(
+        [
+            [ToolCall("book_appointment", {"name": "caller", "day": "monday", "time": "09:00"})],
+            ["Sure, can I get your name?"],
+            [ToolCall("book_appointment", {"name": "Tom Reyes", "day": "monday", "time": "09:00"})],
+            ["Booked, Tom."],
+        ]
+    )
+    dialog = Dialog(llm, tools)
+    await collect(dialog.reply("Monday at 9am please"))
+    assert app.state.store.bookings() == []
+    assert "name" in llm.seen[1][-1]["content"]
+    await collect(dialog.reply("It's Tom Reyes."))
+    assert [b.name for b in app.state.store.bookings()] == ["Tom Reyes"]
+
+
+def test_name_check():
+    from voiceprobe.agent.dialog import _name_given
+
+    said = "Hi, I need the first slot on Monday. My name is Leena Park."
+    assert _name_given("Leena Park", said)
+    assert _name_given("Lena Park", said)
+    assert not _name_given("the caller", said)
+    assert not _name_given("Sam", said)

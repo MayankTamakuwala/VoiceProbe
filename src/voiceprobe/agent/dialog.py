@@ -1,5 +1,6 @@
 import json
 import logging
+import re
 from collections.abc import AsyncIterator
 
 from voiceprobe.agent.llm import Ollama, ToolCall
@@ -22,7 +23,7 @@ How to talk:
 Booking:
 - You need the caller's name, a day and a time before booking.
 - Check availability first if the caller is unsure or the slot might be taken.
-- Read back the day and time and get a yes before calling book_appointment.
+- Read back the name, day and time and get a yes before calling book_appointment.
 - If they change their mind after booking, use reschedule_appointment, don't book twice.
 - Only cancel when the caller clearly asks to cancel. Saying thanks or goodbye is not a cancellation.
 - Never claim something is booked unless the tool said so.
@@ -42,6 +43,18 @@ _CANCEL_WORDS = ("cancel", "call it off", "call off", "don't need", "do not need
 def _asked_to_cancel(text: str) -> bool:
     text = text.lower()
     return any(w in text for w in _CANCEL_WORDS)
+
+
+# things the model puts in the name field when it doesn't have one
+_NOT_NAMES = {"the", "a", "my", "mr", "mrs", "ms", "dr", "caller", "patient", "customer", "user", "unknown", "name"}
+
+
+def _words(text: str) -> set[str]:
+    return {w for w in re.findall(r"[a-z']+", text.lower()) if len(w) > 1}
+
+
+def _name_given(name: str, said: str) -> bool:
+    return bool((_words(name) - _NOT_NAMES) & _words(said))
 
 
 class Dialog:
@@ -96,6 +109,12 @@ class Dialog:
                     # 8b models love to "cancel" on goodbye, don't trust them with it
                     log.warning("blocked cancel, caller said: %r", user_text)
                     result = {"error": "caller did not ask to cancel, booking kept"}
+                elif call.name == "book_appointment" and not _name_given(
+                    str(call.arguments.get("name", "")), self._caller_said()
+                ):
+                    # it will happily book under "caller" or a made up name
+                    log.warning("blocked booking under %r", call.arguments.get("name"))
+                    result = {"error": "the caller hasn't told you their name yet, ask for it first"}
                 else:
                     result = await self.tools.run(call.name, call.arguments)
                 self.messages.append(
@@ -103,6 +122,9 @@ class Dialog:
                 )
 
         log.warning("hit max tool rounds")
+
+    def _caller_said(self) -> str:
+        return " ".join(m["content"] for m in self.messages if m["role"] == "user")
 
     def interrupted(self, heard: str) -> None:
         last = self.messages[-1]
