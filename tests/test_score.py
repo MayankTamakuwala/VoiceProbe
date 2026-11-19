@@ -94,6 +94,15 @@ def test_tools():
     assert check_tools(CHANGE, calls) == (False, ["called cancel_appointment"])
 
 
+def test_blocked_calls_dont_count():
+    calls = [
+        {"name": "book_appointment"},
+        {"name": "reschedule_appointment"},
+        {"name": "cancel_appointment", "blocked": True},
+    ]
+    assert check_tools(CHANGE, calls) == (True, [])
+
+
 def test_ttfa_and_barge_ins():
     rec = record(
         caller_turns=[caller_turn("hi", 2.0, 3.5), caller_turn("bye", 10.0, None)],
@@ -118,6 +127,7 @@ def test_score_and_summary():
         tool_calls=[
             {"name": "book_appointment", "result": {"id": "a"}},
             {"name": "book_appointment", "result": {"error": "taken"}},
+            {"name": "cancel_appointment", "result": {"error": "caller did not ask"}, "blocked": True},
         ],
     )
     result = {
@@ -128,6 +138,7 @@ def test_score_and_summary():
     assert call["task"] is False and call["tools_ok"] is False
     assert call["ttfa_ms"] == [2000.0, 2500.0]
     assert call["tool_errors"] == 1
+    assert call["blocked_tools"] == ["cancel_appointment"]
     assert (call["wer_errors"], call["wer_words"]) == (1, 11)
     assert call["unheard"] == 1
 

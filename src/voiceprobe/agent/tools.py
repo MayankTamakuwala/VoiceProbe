@@ -54,6 +54,7 @@ class ToolRecord:
     started: float
     ms: float
     attempts: int
+    blocked: bool = False
 
 
 @dataclass
@@ -143,6 +144,11 @@ class BookingTools:
         if name != "check_availability":
             self.booking = data
         return data, attempts
+
+    def blocked(self, name: str, args: dict, reason: str) -> dict:
+        result = {"error": reason}
+        self.history.append(ToolRecord(name, args, result, time.time(), 0.0, 0, blocked=True))
+        return result
 
     async def close(self) -> None:
         await self.client.aclose()

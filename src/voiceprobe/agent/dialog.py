@@ -46,7 +46,10 @@ def _asked_to_cancel(text: str) -> bool:
 
 
 # things the model puts in the name field when it doesn't have one
-_NOT_NAMES = {"the", "a", "my", "mr", "mrs", "ms", "dr", "caller", "patient", "customer", "user", "unknown", "name"}
+_NOT_NAMES = {
+    "the", "a", "my", "mr", "mrs", "ms", "dr",
+    "caller", "patient", "customer", "user", "unknown", "name",
+}
 
 
 def _words(text: str) -> set[str]:
@@ -76,7 +79,7 @@ class Dialog:
             calls: list[ToolCall] = []
             done = False
             try:
-                async for part in self.llm.chat(self.messages, tools=TOOLS):
+                async for part in self.llm.chat(self.messages, tools=self._tools()):
                     if isinstance(part, ToolCall):
                         calls.append(part)
                         continue
@@ -105,16 +108,19 @@ class Dialog:
                 yield filler
             for call in calls:
                 log.info("tool %s %s", call.name, call.arguments)
-                if call.name == "cancel_appointment" and not _asked_to_cancel(user_text):
+                if call.name == "cancel_appointment" and not self._cancel_requested():
                     # 8b models love to "cancel" on goodbye, don't trust them with it
                     log.warning("blocked cancel, caller said: %r", user_text)
-                    result = {"error": "caller did not ask to cancel, booking kept"}
+                    result = self.tools.blocked(
+                        call.name, call.arguments, "caller did not ask to cancel, booking kept"
+                    )
                 elif call.name == "book_appointment" and not _name_given(
                     str(call.arguments.get("name", "")), self._caller_said()
                 ):
                     # it will happily book under "caller" or a made up name
                     log.warning("blocked booking under %r", call.arguments.get("name"))
-                    result = {"error": "the caller hasn't told you their name yet, ask for it first"}
+                    reason = "the caller hasn't told you their name yet, ask for it first"
+                    result = self.tools.blocked(call.name, call.arguments, reason)
                 else:
                     result = await self.tools.run(call.name, call.arguments)
                 self.messages.append(
@@ -125,6 +131,18 @@ class Dialog:
 
     def _caller_said(self) -> str:
         return " ".join(m["content"] for m in self.messages if m["role"] == "user")
+
+    def _cancel_requested(self) -> bool:
+        # this turn or the one before, so "yes" after "are you sure?" still counts
+        said = [m["content"] for m in self.messages if m["role"] == "user"]
+        return any(_asked_to_cancel(t) for t in said[-2:])
+
+    def _tools(self) -> list[dict]:
+        # if cancel isn't on offer it can't reach for it on goodbye, which also
+        # saves a whole llm round every time it would have been blocked
+        if self._cancel_requested():
+            return TOOLS
+        return [t for t in TOOLS if t["function"]["name"] != "cancel_appointment"]
 
     def interrupted(self, heard: str) -> None:
         last = self.messages[-1]

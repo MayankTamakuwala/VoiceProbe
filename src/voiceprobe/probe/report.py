@@ -49,6 +49,8 @@ def format_report(report: dict) -> str:
         )
         for note in c["task_notes"] + c["tool_notes"] + c["errors"]:
             lines.append(f"    - {note}")
+        if c.get("blocked_tools"):
+            lines.append(f"    . blocked: {', '.join(c['blocked_tools'])}")
 
     s = report["summary"]
     t, b, w = s["ttfa_ms"], s["barge_in"], s["wer"]
@@ -68,7 +70,10 @@ def format_report(report: dict) -> str:
     ts, tl = s["task_success"], s["tools"]
     lines.append(f"task success       {ts['passed']}/{ts['scored']}")
     failed = tl["failed_calls"]
-    lines.append(f"tool use           {tl['passed']}/{tl['total']}  ({failed} failed tool call{'' if failed == 1 else 's'})")
+    extra = f"{failed} failed tool call{'' if failed == 1 else 's'}"
+    if tl.get("blocked"):
+        extra += f", {tl['blocked']} blocked by the agent"
+    lines.append(f"tool use           {tl['passed']}/{tl['total']}  ({extra})")
     if w["rate"] is not None:
         unheard = f", {w['unheard_turns']} turns never transcribed" if w["unheard_turns"] else ""
         lines.append(f"transcription wer  {w['rate']:.1%} over {w['words']} words{unheard}")

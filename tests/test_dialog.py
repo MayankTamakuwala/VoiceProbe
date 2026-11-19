@@ -15,9 +15,11 @@ class ScriptedLlm:
     def __init__(self, turns):
         self.turns = list(turns)
         self.seen = []
+        self.offered = []
 
     async def chat(self, messages, tools=None):
         self.seen.append([dict(m) for m in messages])
+        self.offered.append([t["function"]["name"] for t in tools or []])
         for part in self.turns.pop(0):
             await asyncio.sleep(0)
             yield part
@@ -89,6 +91,28 @@ async def test_goodbye_does_not_cancel(tools, app):
     await collect(dialog.reply("Thanks, bye"))
     assert [b.status for b in app.state.store.bookings()] == ["confirmed"]
     assert "did not ask to cancel" in llm.seen[3][-1]["content"]
+    assert tools.history[-1].name == "cancel_appointment" and tools.history[-1].blocked
+
+
+async def test_cancel_only_offered_when_asked(tools, app):
+    llm = ScriptedLlm(
+        [
+            [ToolCall("book_appointment", {"name": "Sam", "day": "monday", "time": "10:00"})],
+            ["Booked."],
+            ["Are you sure you want to cancel?"],
+            [ToolCall("cancel_appointment", {})],
+            ["Done, it's cancelled."],
+        ]
+    )
+    dialog = Dialog(llm, tools)
+    await collect(dialog.reply("Book Monday 10, I'm Sam"))
+    assert "cancel_appointment" not in llm.offered[0]
+    await collect(dialog.reply("Actually can I cancel that?"))
+    assert "cancel_appointment" in llm.offered[2]
+    # a plain yes to "are you sure" still has to be able to cancel
+    await collect(dialog.reply("Yes."))
+    assert [b.status for b in app.state.store.bookings()] == ["cancelled"]
+    assert not tools.history[-1].blocked
 
 
 async def test_no_booking_without_a_name(tools, app):

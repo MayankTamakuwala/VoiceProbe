@@ -233,6 +233,7 @@ class CallRunner:
                         "result": d.get("result"),
                         "ms": d.get("ms"),
                         "attempts": d.get("attempts"),
+                        "blocked": d.get("blocked", False),
                     }
                 )
             elif ev.kind == "interrupted":

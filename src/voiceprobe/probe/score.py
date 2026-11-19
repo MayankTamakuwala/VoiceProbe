@@ -96,7 +96,8 @@ def check_bookings(scenario: Scenario, bookings: list[dict] | None) -> tuple[boo
 
 
 def check_tools(scenario: Scenario, tool_calls: list[dict]) -> tuple[bool, list[str]]:
-    used = [c["name"] for c in tool_calls]
+    # the agent's own guards stopped blocked ones, so they never touched the bookings
+    used = [c["name"] for c in tool_calls if not c.get("blocked")]
     notes = [f"never called {t}" for t in scenario.expect.tools if t not in used]
     notes += [f"called {t}" for t in scenario.expect.forbidden_tools if t in used]
     return not notes, notes
@@ -129,7 +130,11 @@ def score_call(result: dict, scenario: Scenario, barge_ms: float = BARGE_MS) -> 
         "task_notes": task_notes,
         "tools_ok": tools_ok,
         "tool_notes": tool_notes,
-        "tool_errors": sum(isinstance(c["result"], dict) and "error" in c["result"] for c in rec["tool_calls"]),
+        "tool_errors": sum(
+            isinstance(c["result"], dict) and "error" in c["result"] and not c.get("blocked")
+            for c in rec["tool_calls"]
+        ),
+        "blocked_tools": [c["name"] for c in rec["tool_calls"] if c.get("blocked")],
         "wer_errors": errors,
         "wer_words": words,
         "unheard": sum(t["heard_as"] is None and t["end"] is not None for t in rec["caller_turns"]),
@@ -163,6 +168,7 @@ def summarize(calls: list[dict]) -> dict:
             "passed": sum(c["tools_ok"] for c in calls),
             "total": len(calls),
             "failed_calls": sum(c["tool_errors"] for c in calls),
+            "blocked": sum(len(c["blocked_tools"]) for c in calls),
         },
         "wer": {
             "rate": round(errors / words, 4) if words else None,
