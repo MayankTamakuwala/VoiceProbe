@@ -102,7 +102,7 @@ def cmd_run(args):
     from voiceprobe.agent.llm import Ollama
     from voiceprobe.audio.stt import Stt
     from voiceprobe.audio.tts import Tts
-    from voiceprobe.probe.adapters import ReferenceAdapter
+    from voiceprobe.probe.adapters import ElevenLabsAdapter, ReferenceAdapter
     from voiceprobe.probe.report import format_report, score_run
     from voiceprobe.probe.scenario import load_all
     from voiceprobe.probe.suite import Bookings, run_dir, run_suite
@@ -113,16 +113,24 @@ def cmd_run(args):
     if not scenarios:
         raise SystemExit("no scenarios to run")
 
+    if args.agent == "elevenlabs" and not os.getenv("ELEVENLABS_AGENT_ID"):
+        raise SystemExit("set ELEVENLABS_AGENT_ID first (voiceprobe elevenlabs-setup makes one)")
+
+    def make_adapter():
+        if args.agent == "elevenlabs":
+            return ElevenLabsAdapter(booking_url=args.booking_url)
+        return ReferenceAdapter(args.url)
+
     async def run():
         llm = Ollama(temperature=args.temperature, seed=args.seed)
         bookings = Bookings(args.booking_url)
-        out = run_dir(args.out, args.label)
+        out = run_dir(args.out, args.label or args.agent)
         try:
             await llm.warmup()
             stt = Stt() if args.hear == "audio" else None
             results = await run_suite(
                 scenarios,
-                lambda: ReferenceAdapter(args.url),
+                make_adapter,
                 llm,
                 Tts(),
                 stt,
@@ -180,6 +188,21 @@ def cmd_load(args):
     print(f"\nsaved to {out}")
 
 
+def cmd_elevenlabs_setup(args):
+    import asyncio
+
+    from voiceprobe.probe.elevenlabs import ElevenLabsError, create_agent
+
+    key = os.getenv("ELEVENLABS_API_KEY")
+    if not key:
+        raise SystemExit("set ELEVENLABS_API_KEY in .env first")
+    try:
+        agent_id = asyncio.run(create_agent(key, llm=args.llm, max_seconds=args.max_seconds))
+    except ElevenLabsError as e:
+        raise SystemExit(str(e)) from None
+    print(f"created agent, add this to .env:\n\nELEVENLABS_AGENT_ID={agent_id}")
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="voiceprobe")
     parser.add_argument("-v", "--verbose", action="store_true")
@@ -219,6 +242,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("run", help="run scenarios against an agent and save the calls")
     p.add_argument("scenarios", nargs="*", default=["scenarios"])
+    p.add_argument("--agent", choices=["reference", "elevenlabs"], default="reference")
     p.add_argument("--only", nargs="+", help="scenario ids to run")
     p.add_argument("--url", default="ws://127.0.0.1:8000/call")
     p.add_argument("--booking-url", default=os.getenv("BOOKING_URL", "http://127.0.0.1:8001"))
@@ -240,6 +264,11 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--keep-going", action="store_true", help="run every level even after it breaks")
     p.add_argument("-o", "--out", default="out/runs")
     p.set_defaults(func=cmd_load)
+
+    p = sub.add_parser("elevenlabs-setup", help="create an elevenlabs agent matching the reference one")
+    p.add_argument("--llm", default="gemini-2.5-flash")
+    p.add_argument("--max-seconds", type=int, default=150, help="hard cap on each call")
+    p.set_defaults(func=cmd_elevenlabs_setup)
 
     p = sub.add_parser("score", help="score a saved run (defaults to the latest)")
     p.add_argument("run", nargs="?")

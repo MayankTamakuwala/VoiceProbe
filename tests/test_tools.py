@@ -56,6 +56,14 @@ async def test_second_booking_becomes_reschedule(tools, app):
     assert [h.name for h in tools.history] == ["book_appointment", "reschedule_appointment"]
 
 
+async def test_plain_tools_book_twice(app):
+    tools = make_tools(httpx.ASGITransport(app=app))
+    tools.move_rebookings = False
+    await tools.run("book_appointment", {"name": "Marcus Bell", "day": "tuesday", "time": "15:00"})
+    await tools.run("book_appointment", {"name": "Marcus Bell", "day": "wednesday", "time": "10:00"})
+    assert len(app.state.store.bookings("confirmed")) == 2
+
+
 async def test_new_booking_after_cancel_or_for_someone_else(tools, app):
     await tools.run("book_appointment", {"name": "Owen Grant", "day": "monday", "time": "09:00"})
     await tools.run("book_appointment", {"name": "Ada Lee", "day": "monday", "time": "10:00"})

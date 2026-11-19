@@ -65,6 +65,9 @@ class BookingTools:
     retries: int = 3
     booking_id: str | None = None
     booking: dict | None = None
+    # the reference agent turns a second booking into a reschedule. the harness
+    # runs tools for other agents too and those should get the plain behaviour
+    move_rebookings: bool = True
     history: list[ToolRecord] = field(default_factory=list)
 
     def __post_init__(self):
@@ -100,7 +103,7 @@ class BookingTools:
 
     async def run(self, name: str, args: dict) -> dict:
         moved = False
-        if name == "book_appointment" and self._rebooking(args):
+        if self.move_rebookings and name == "book_appointment" and self._rebooking(args):
             # when the caller changes their mind the model tends to just book again
             log.info("caller already has a booking, moving it instead")
             name, moved = "reschedule_appointment", True
